@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RoadVault Founder Kit WebGL Cinematic</title>
+    <style>
+      :root {
+        --rv-ink: #0b0d09;
+        --rv-signal: #c7ff4a;
+        --rv-copper: #b65f3f;
+        --rv-paper: #fbf8ef;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #050704;
+        color: var(--rv-signal);
+        font-family: "Courier New", monospace;
+      }
+
+      canvas {
+        display: block;
+      }
+
+      .hud {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, rgba(199, 255, 74, 0.1) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(199, 255, 74, 0.08) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mix-blend-mode: screen;
+      }
+
+      .hud::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at 50% 52%, transparent 0 56%, rgba(0, 0, 0, 0.36) 88%);
+      }
+
+      .corner-copy {
+        position: fixed;
+        left: 44px;
+        top: 34px;
+        display: grid;
+        gap: 6px;
+        color: var(--rv-signal);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-shadow: 0 0 18px rgba(199, 255, 74, 0.58);
+      }
+
+      .corner-copy span:last-child {
+        color: rgba(251, 248, 239, 0.8);
+        font-size: 11px;
+        letter-spacing: 0.18em;
+      }
+
+      .scanline {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 2px;
+        background: rgba(199, 255, 74, 0.8);
+        box-shadow: 0 0 20px rgba(199, 255, 74, 0.95);
+        transform: translateY(var(--scan, 0));
+      }
+
+      .label {
+        position: fixed;
+        min-width: 182px;
+        padding: 9px 11px;
+        color: var(--rv-signal);
+        border: 1px solid rgba(199, 255, 74, 0.72);
+        background: rgba(5, 9, 7, 0.72);
+        box-shadow: 0 0 18px rgba(199, 255, 74, 0.28);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        line-height: 1.25;
+        text-transform: uppercase;
+        text-shadow: 0 0 14px rgba(199, 255, 74, 0.74);
+        transform: translate(-50%, -50%);
+        transition: opacity 120ms linear;
+      }
+
+      .label small {
+        display: block;
+        margin-top: 4px;
+        color: rgba(251, 248, 239, 0.76);
+        font-size: 9px;
+        letter-spacing: 0.12em;
+      }
+
+      .label::before {
+        content: "";
+        position: absolute;
+        left: -68px;
+        top: 50%;
+        width: 56px;
+        height: 1px;
+        background: currentColor;
+        box-shadow: 0 0 10px currentColor;
+      }
+
+      .xray-tag {
+        position: fixed;
+        right: 48px;
+        bottom: 38px;
+        display: grid;
+        gap: 6px;
+        opacity: var(--xray-alpha, 0);
+        color: var(--rv-signal);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-align: right;
+        text-transform: uppercase;
+        text-shadow: 0 0 20px rgba(199, 255, 74, 0.8);
+      }
+
+      .xray-tag small {
+        color: rgba(251, 248, 239, 0.78);
+        font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="corner-copy">
+      <span>ROADVAULT / FOUNDER KIT</span>
+      <span>360 recovery system prototype</span>
+    </div>
+    <div class="hud"></div>
+    <div class="scanline"></div>
+    <div class="label" id="label-pouch">TOURVAULT TECH POUCH<small>tracker-compatible carry core</small></div>
+    <div class="label" id="label-usb">SETVAULT USB/SD VAULT<small>small media, high consequence</small></div>
+    <div class="label" id="label-nfc">NFC LOST CARD<small>tap to contact owner</small></div>
+    <div class="label" id="label-qr">QR RECOVERY LABEL<small>scan for return page</small></div>
+    <div class="xray-tag">X-RAY MODE<small>hidden tracker pocket revealed</small></div>
+
+    <script type="module">
+      import * as THREE from "./three.module.js";
+
+      const width = 1280;
+      const height = 720;
+      const duration = 8;
+      const captureMode = new URLSearchParams(window.location.search).has("capture");
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: false,
+        preserveDrawingBuffer: true,
+      });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(1);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.shadowMap.enabled = true;
+      document.body.appendChild(renderer.domElement);
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x080a07);
+      scene.fog = new THREE.FogExp2(0x080a07, 0.035);
+
+      const camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 100);
+      camera.position.set(0, 1.1, 7.0);
+
+      const rig = new THREE.Group();
+      scene.add(rig);
+
+      const keyLight = new THREE.SpotLight(0xc7ff4a, 5.2, 20, Math.PI / 4.8, 0.7, 1.1);
+      keyLight.position.set(-4.4, 5.4, 5.6);
+      keyLight.castShadow = true;
+      scene.add(keyLight);
+
+      const rimLight = new THREE.SpotLight(0x7ee0ff, 3.8, 18, Math.PI / 3.6, 0.8, 1.4);
+      rimLight.position.set(4.5, 3.1, -4.8);
+      scene.add(rimLight);
+      scene.add(new THREE.AmbientLight(0xd7fff2, 0.72));
+
+      function easeOutQuint(value) {
+        return 1 - Math.pow(1 - Math.min(Math.max(value, 0), 1), 5);
+      }
+
+      function makeCanvasTexture(draw) {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1024;
+        canvas.height = 640;
+        const ctx = canvas.getContext("2d");
+        draw(ctx, canvas);
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.anisotropy = 8;
+        return texture;
+      }
+
+      const pouchTexture = makeCanvasTexture((ctx, canvas) => {
+        ctx.fillStyle = "#4f6344";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "rgba(199,255,74,0.05)";
+        for (let x = 0; x < canvas.width; x += 42) ctx.fillRect(x, 0, 1, canvas.height);
+        for (let y = 0; y < canvas.height; y += 42) ctx.fillRect(0, y, canvas.width, 1);
+        ctx.strokeStyle = "rgba(251,248,239,0.34)";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(80, 138);
+        ctx.lineTo(944, 138);
+        ctx.moveTo(80, 184);
+        ctx.lineTo(944, 184);
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(199,255,74,0.48)";
+        ctx.lineWidth = 2;
+        for (let x = 88; x < 940; x += 28) {
+          ctx.beginPath();
+          ctx.moveTo(x, 206);
+          ctx.lineTo(x + 10, 206);
+          ctx.stroke();
+        }
+        ctx.font = "700 58px Courier New";
+        ctx.fillStyle = "#fffbe9";
+        ctx.fillText("TOURVAULT", 80, 430);
+        ctx.font = "700 22px Courier New";
+        ctx.fillStyle = "#c7ff4a";
+        ctx.fillText("HIDDEN TRACKER POCKET", 84, 476);
+      });
+
+      const pouchMaterial = new THREE.MeshStandardMaterial({
+        color: 0x8da56e,
+        emissive: 0x17230f,
+        emissiveIntensity: 0.72,
+        map: pouchTexture,
+        roughness: 0.58,
+        metalness: 0.1,
+      });
+
+      const pouch = new THREE.Mesh(new THREE.BoxGeometry(5.1, 3.05, 0.58, 16, 10, 2), pouchMaterial);
+      pouch.castShadow = true;
+      pouch.receiveShadow = true;
+      rig.add(pouch);
+
+      const pouchEdges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(pouch.geometry),
+        new THREE.LineBasicMaterial({ color: 0xc7ff4a, transparent: true, opacity: 0.38 }),
+      );
+      pouch.add(pouchEdges);
+
+      const pocket = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.78, 1.03),
+        new THREE.MeshBasicMaterial({
+          color: 0xc7ff4a,
+          transparent: true,
+          opacity: 0,
+          side: THREE.DoubleSide,
+        }),
+      );
+      pocket.position.set(-1.02, -0.14, 0.305);
+      pouch.add(pocket);
+
+      const pocketWire = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.PlaneGeometry(1.78, 1.03)),
+        new THREE.LineBasicMaterial({ color: 0xc7ff4a, transparent: true, opacity: 0 }),
+      );
+      pocketWire.position.copy(pocket.position);
+      pouch.add(pocketWire);
+
+      function makeQrTexture() {
+        return makeCanvasTexture((ctx, canvas) => {
+          ctx.fillStyle = "#fbf8ef";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "#0b0d09";
+          const cells = [
+            [1, 1, 6, 6], [18, 1, 6, 6], [1, 12, 6, 6],
+            [9, 3, 2, 2], [13, 4, 2, 2], [8, 8, 3, 2],
+            [15, 10, 2, 3], [10, 13, 2, 2], [18, 14, 3, 2],
+            [8, 17, 2, 2], [12, 18, 3, 2], [16, 18, 2, 2],
+          ];
+          const unit = 34;
+          for (const [x, y, w, h] of cells) ctx.fillRect(x * unit, y * unit, w * unit, h * unit);
+          ctx.font = "700 56px Courier New";
+          ctx.fillText("QR", 72, 560);
+        });
+      }
+
+      const usb = new THREE.Group();
+      const usbBody = new THREE.Mesh(
+        new THREE.BoxGeometry(1.05, 0.42, 0.18),
+        new THREE.MeshStandardMaterial({ color: 0xbec7c0, metalness: 0.8, roughness: 0.22 }),
+      );
+      const usbGrip = new THREE.Mesh(
+        new THREE.BoxGeometry(0.68, 0.5, 0.26),
+        new THREE.MeshStandardMaterial({ color: 0x11120f, metalness: 0.3, roughness: 0.45 }),
+      );
+      usbGrip.position.x = -0.52;
+      usb.add(usbBody, usbGrip);
+      rig.add(usb);
+
+      const nfcCard = new THREE.Mesh(
+        new THREE.BoxGeometry(1.42, 0.92, 0.05),
+        new THREE.MeshStandardMaterial({ color: 0xf7efd7, roughness: 0.5, metalness: 0.02 }),
+      );
+      const nfcText = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.08, 0.36),
+        new THREE.MeshBasicMaterial({
+          map: makeCanvasTexture((ctx) => {
+            ctx.fillStyle = "#f7efd7";
+            ctx.fillRect(0, 0, 1024, 640);
+            ctx.fillStyle = "#0b0d09";
+            ctx.font = "700 88px Courier New";
+            ctx.fillText("NFC", 120, 280);
+            ctx.font = "700 34px Courier New";
+            ctx.fillStyle = "#b65f3f";
+            ctx.fillText("LOST CARD", 120, 360);
+          }),
+          transparent: true,
+        }),
+      );
+      nfcText.position.z = 0.035;
+      nfcCard.add(nfcText);
+      rig.add(nfcCard);
+
+      const qrLabel = new THREE.Mesh(
+        new THREE.BoxGeometry(1.0, 1.0, 0.05),
+        new THREE.MeshStandardMaterial({ color: 0xfbf8ef, map: makeQrTexture(), roughness: 0.52 }),
+      );
+      rig.add(qrLabel);
+
+      const componentMaterials = [
+        usbBody.material,
+        usbGrip.material,
+        nfcCard.material,
+        nfcText.material,
+        qrLabel.material,
+      ];
+      for (const material of componentMaterials) {
+        material.transparent = true;
+        material.opacity = 0;
+      }
+
+      const glowRing = new THREE.Mesh(
+        new THREE.TorusGeometry(0.34, 0.018, 16, 64),
+        new THREE.MeshBasicMaterial({ color: 0xc7ff4a, transparent: true, opacity: 0.88 }),
+      );
+      rig.add(glowRing);
+
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(18, 18),
+        new THREE.MeshStandardMaterial({ color: 0x090d08, roughness: 0.95, metalness: 0.18 }),
+      );
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -2.2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      const labels = [
+        { el: document.querySelector("#label-pouch"), object: pouch, x: 204, y: 198 },
+        { el: document.querySelector("#label-usb"), object: usb, x: 1015, y: 166 },
+        { el: document.querySelector("#label-nfc"), object: nfcCard, x: 1042, y: 326 },
+        { el: document.querySelector("#label-qr"), object: qrLabel, x: 228, y: 548 },
+      ];
+
+      function placeLabel(label) {
+        label.el.style.left = `${label.x}px`;
+        label.el.style.top = `${label.y}px`;
+      }
+
+      function setAnimation(seconds) {
+        const t = ((seconds % duration) + duration) % duration;
+        const p = t / duration;
+        const emerge = easeOutQuint((p - 0.22) / 0.24);
+        const componentAlpha = easeOutQuint((p - 0.22) / 0.13);
+        const xray = easeOutQuint((p - 0.68) / 0.22);
+        const settle = Math.sin(p * Math.PI * 2);
+        const orbit = p * Math.PI * 2;
+
+        rig.rotation.y = Math.sin(p * Math.PI * 2) * 0.08;
+        rig.rotation.x = -0.06 + Math.sin(p * Math.PI * 2) * 0.04;
+        rig.position.y = Math.sin(p * Math.PI * 2) * 0.12;
+
+        pouch.rotation.y = THREE.MathUtils.lerp(orbit, Math.sin(p * Math.PI * 4) * 0.06, xray);
+        pouch.rotation.x = -0.04 + Math.sin(p * Math.PI * 2.4) * 0.06;
+        pouch.scale.setScalar(1 + xray * 0.1);
+        pouchMaterial.transparent = xray > 0.01;
+        pouchMaterial.opacity = 1 - xray * 0.52;
+        pouchEdges.material.opacity = 0.38 + xray * 0.58;
+        pocket.material.opacity = xray * 0.42;
+        pocketWire.material.opacity = xray * 1;
+
+        for (const material of componentMaterials) {
+          material.opacity = componentAlpha;
+        }
+        usb.visible = componentAlpha > 0.02;
+        nfcCard.visible = componentAlpha > 0.02;
+        qrLabel.visible = componentAlpha > 0.02;
+
+        usb.position.set(-0.16 - emerge * 1.08, -0.08 + emerge * 1.1 + settle * 0.05, 0.82 + emerge * 0.82);
+        usb.rotation.set(0.3 + p * 2.8, 0.6 + p * 5.2, -0.3 + p * 1.6);
+        usb.scale.setScalar(0.82 + emerge * 0.42);
+
+        nfcCard.position.set(0.34 + emerge * 0.98, 0.05 + emerge * 0.82 + Math.sin(t * 2.8) * 0.04, 0.86 + emerge * 0.82);
+        nfcCard.rotation.set(0.2 + p * 1.8, -0.45 + p * 4.4, 0.2);
+        nfcCard.scale.setScalar(0.86 + emerge * 0.42);
+
+        qrLabel.position.set(-0.22 - emerge * 0.78, -0.18 - emerge * 0.92 + Math.cos(t * 2.4) * 0.04, 0.92 + emerge * 0.82);
+        qrLabel.rotation.set(-0.2 + p * 2.2, 0.2 + p * 3.8, -0.4);
+        qrLabel.scale.setScalar(0.84 + emerge * 0.24);
+
+        glowRing.position.copy(pocket.getWorldPosition(new THREE.Vector3()));
+        glowRing.position.z += 0.18 + xray * 0.15;
+        glowRing.rotation.set(Math.PI / 2, 0, orbit * 2.2);
+        glowRing.material.opacity = 0.25 + xray * 0.65;
+        glowRing.scale.setScalar(0.7 + xray * 0.35 + Math.sin(t * 8) * 0.04);
+
+        camera.position.x = Math.sin(orbit * 0.65) * 0.42;
+        camera.position.y = 1.02 + Math.sin(orbit) * 0.12;
+        camera.position.z = 6.9 + Math.cos(orbit * 0.4) * 0.26;
+        camera.lookAt(0, 0.02, 0);
+
+        document.documentElement.style.setProperty("--scan", `${(p * height * 1.35) % height}px`);
+        document.documentElement.style.setProperty("--xray-alpha", String(xray));
+        for (const label of labels) {
+          placeLabel(label);
+          label.el.style.opacity = label.object === pouch ? "1" : String(Math.min(1, componentAlpha * 1.35));
+        }
+      }
+
+      function renderFrame(seconds) {
+        setAnimation(seconds);
+        renderer.render(scene, camera);
+      }
+
+      window.renderFrame = renderFrame;
+      window.__roadVaultReady = true;
+
+      const start = performance.now();
+      function loop(now) {
+        renderFrame((now - start) / 1000);
+        requestAnimationFrame(loop);
+      }
+      if (captureMode) {
+        renderFrame(0);
+      } else {
+        requestAnimationFrame(loop);
+      }
+    </script>
+  </body>
+</html>

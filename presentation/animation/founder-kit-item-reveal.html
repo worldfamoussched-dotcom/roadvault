@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RoadVault Founder Kit Item Reveal</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: #050704;
+      }
+
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="scene" width="1280" height="720"></canvas>
+
+    <script>
+      const canvas = document.querySelector("#scene");
+      const ctx = canvas.getContext("2d");
+      const width = canvas.width;
+      const height = canvas.height;
+      const duration = 12;
+      const signal = "#c7ff4a";
+      const paper = "#fbf8ef";
+      const copper = "#b65f3f";
+      const cyan = "#7ee0ff";
+      const ink = "#050704";
+
+      const revealItems = [
+        { id: "usb", title: "SETVAULT USB/SD VAULT", subtitle: "small media, high consequence" },
+        { id: "qr", title: "QR RECOVERY LABEL", subtitle: "scan for return page" },
+        { id: "nfc", title: "NFC LOST CARD", subtitle: "tap to contact owner" },
+        { id: "labels", title: "CREATOR INVENTORY LABELS", subtitle: "mark cases, drives, and adapters" },
+        { id: "pouch", title: "TOURVAULT TECH POUCH", subtitle: "tracker-compatible carry core" },
+      ];
+
+      function clamp(value, min = 0, max = 1) {
+        return Math.min(Math.max(value, min), max);
+      }
+
+      function smooth(value) {
+        const t = clamp(value);
+        return t * t * (3 - 2 * t);
+      }
+
+      function easeOut(value) {
+        return 1 - Math.pow(1 - clamp(value), 4);
+      }
+
+      function lerp(start, end, value) {
+        return start + (end - start) * value;
+      }
+
+      function glow(color, blur = 20) {
+        ctx.shadowColor = color;
+        ctx.shadowBlur = blur;
+      }
+
+      function clearGlow() {
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
+      }
+
+      function roundedRect(x, y, w, h, r) {
+        const radius = Math.min(r, w / 2, h / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + w - radius, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+        ctx.lineTo(x + w, y + h - radius);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+        ctx.lineTo(x + radius, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+      }
+
+      function drawGrid(time) {
+        ctx.fillStyle = ink;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.save();
+        ctx.globalAlpha = 0.35;
+        ctx.strokeStyle = "rgba(199,255,74,0.18)";
+        ctx.lineWidth = 1;
+        const drift = (time * 8) % 42;
+        for (let x = -42 + drift; x < width + 42; x += 42) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, height);
+          ctx.stroke();
+        }
+        for (let y = 0; y < height; y += 42) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        const bloom = ctx.createRadialGradient(900, 120, 40, 900, 120, 540);
+        bloom.addColorStop(0, "rgba(126,224,255,0.15)");
+        bloom.addColorStop(1, "rgba(126,224,255,0)");
+        ctx.fillStyle = bloom;
+        ctx.fillRect(0, 0, width, height);
+      }
+
+      function drawFrame(scanY, finalHold) {
+        const frame = { x: 110, y: 80, w: 1060, h: 560 };
+        ctx.save();
+        glow(signal, finalHold ? 28 : 18);
+        ctx.strokeStyle = `rgba(199,255,74,${finalHold ? 0.82 : 0.52})`;
+        ctx.lineWidth = finalHold ? 2 : 1;
+        ctx.strokeRect(frame.x, frame.y, frame.w, frame.h);
+        clearGlow();
+
+        ctx.fillStyle = "rgba(5,9,7,0.46)";
+        ctx.fillRect(frame.x + 1, frame.y + 1, frame.w - 2, frame.h - 2);
+
+        const gradient = ctx.createLinearGradient(0, scanY - 30, 0, scanY + 30);
+        gradient.addColorStop(0, "rgba(199,255,74,0)");
+        gradient.addColorStop(0.5, "rgba(199,255,74,0.92)");
+        gradient.addColorStop(1, "rgba(199,255,74,0)");
+        glow(signal, 18);
+        ctx.fillStyle = gradient;
+        ctx.fillRect(frame.x, scanY - 30, frame.w, 60);
+        ctx.fillStyle = signal;
+        ctx.fillRect(frame.x, scanY, frame.w, finalHold ? 3 : 2);
+        clearGlow();
+
+        ctx.font = "700 15px Courier New";
+        ctx.fillStyle = signal;
+        ctx.fillText("ROADVAULT / KIT MANIFEST", frame.x + 22, frame.y + 34);
+        ctx.fillStyle = "rgba(251,248,239,0.72)";
+        ctx.font = "700 11px Courier New";
+        ctx.fillText("SCAN LINE INTRODUCES EACH RECOVERY COMPONENT", frame.x + 22, frame.y + 55);
+        ctx.restore();
+        return frame;
+      }
+
+      function withObject(x, y, scale, rotation, alpha, draw) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.scale(scale, scale);
+        ctx.globalAlpha *= alpha;
+        draw();
+        ctx.restore();
+      }
+
+      function drawUsb() {
+        ctx.save();
+        ctx.translate(-120, -32);
+        const body = ctx.createLinearGradient(0, 0, 240, 0);
+        body.addColorStop(0, "#272b28");
+        body.addColorStop(0.36, "#7c867d");
+        body.addColorStop(0.65, "#d0d6ce");
+        body.addColorStop(1, "#4c554e");
+        glow("rgba(126,224,255,0.5)", 16);
+        roundedRect(0, 0, 210, 64, 9);
+        ctx.fillStyle = body;
+        ctx.fill();
+        clearGlow();
+        roundedRect(0, 0, 88, 64, 8);
+        ctx.fillStyle = "#11130f";
+        ctx.fill();
+        ctx.fillStyle = signal;
+        ctx.font = "700 16px Courier New";
+        ctx.fillText("SETVAULT", 102, 27);
+        ctx.font = "700 11px Courier New";
+        ctx.fillText("USB / SD", 104, 45);
+        ctx.fillStyle = "rgba(255,255,255,0.26)";
+        ctx.fillRect(20, 15, 46, 7);
+        ctx.fillRect(20, 31, 32, 7);
+        ctx.restore();
+      }
+
+      function drawQr() {
+        ctx.save();
+        ctx.translate(-92, -92);
+        roundedRect(0, 0, 184, 184, 12);
+        ctx.fillStyle = paper;
+        ctx.fill();
+        ctx.strokeStyle = signal;
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        ctx.fillStyle = "#0b0d09";
+        const cells = [
+          [1, 1, 4, 4], [9, 1, 4, 4], [1, 9, 4, 4],
+          [6, 2, 1, 1], [7, 4, 1, 1], [6, 7, 2, 1],
+          [11, 7, 1, 2], [7, 10, 1, 1], [10, 11, 2, 1],
+          [6, 13, 1, 1], [9, 14, 2, 1], [12, 13, 1, 1],
+        ];
+        const unit = 11;
+        for (const [x, y, w, h] of cells) ctx.fillRect(18 + x * unit, 18 + y * unit, w * unit, h * unit);
+        ctx.font = "700 18px Courier New";
+        ctx.fillText("ROADVAULT", 31, 160);
+        ctx.restore();
+      }
+
+      function drawNfc() {
+        ctx.save();
+        ctx.translate(-118, -74);
+        const card = ctx.createLinearGradient(0, 0, 236, 148);
+        card.addColorStop(0, "#fff8df");
+        card.addColorStop(0.58, "#d9d0b8");
+        card.addColorStop(1, "#a9a188");
+        roundedRect(0, 0, 236, 148, 14);
+        glow("rgba(251,248,239,0.28)", 14);
+        ctx.fillStyle = card;
+        ctx.fill();
+        clearGlow();
+        ctx.strokeStyle = "rgba(5,7,4,0.32)";
+        ctx.stroke();
+        ctx.fillStyle = "#0b0d09";
+        ctx.font = "700 34px Courier New";
+        ctx.fillText("NFC", 24, 62);
+        ctx.font = "700 16px Courier New";
+        ctx.fillStyle = copper;
+        ctx.fillText("LOST CARD", 24, 92);
+        ctx.strokeStyle = "#0b0d09";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(176, 72, 20, -0.8, 0.8);
+        ctx.arc(176, 72, 36, -0.8, 0.8);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawLabels() {
+        ctx.save();
+        ctx.translate(-130, -84);
+        for (let i = 0; i < 4; i += 1) {
+          const y = i * 42;
+          roundedRect(0, y, 260, 30, 5);
+          ctx.fillStyle = i % 2 === 0 ? "#f6efd9" : "#11150f";
+          ctx.fill();
+          ctx.strokeStyle = signal;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+          ctx.fillStyle = i % 2 === 0 ? "#0b0d09" : signal;
+          ctx.font = "700 12px Courier New";
+          ctx.fillText(`RV-ID-${String(i + 1).padStart(3, "0")}`, 14, y + 20);
+          ctx.fillRect(172, y + 9, 70, 12);
+        }
+        ctx.restore();
+      }
+
+      function drawPouch() {
+        ctx.save();
+        ctx.translate(-190, -116);
+        const pouch = ctx.createLinearGradient(0, 0, 380, 232);
+        pouch.addColorStop(0, "#182017");
+        pouch.addColorStop(0.5, "#4f6344");
+        pouch.addColorStop(1, "#171c15");
+        roundedRect(0, 0, 380, 232, 18);
+        glow("rgba(199,255,74,0.28)", 18);
+        ctx.fillStyle = pouch;
+        ctx.fill();
+        clearGlow();
+        ctx.strokeStyle = "rgba(199,255,74,0.58)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(251,248,239,0.26)";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(32, 54);
+        ctx.lineTo(348, 54);
+        ctx.moveTo(32, 82);
+        ctx.lineTo(348, 82);
+        ctx.stroke();
+        ctx.strokeStyle = "rgba(199,255,74,0.36)";
+        ctx.lineWidth = 2;
+        for (let x = 38; x < 330; x += 18) {
+          ctx.beginPath();
+          ctx.moveTo(x, 102);
+          ctx.lineTo(x + 8, 102);
+          ctx.stroke();
+        }
+        ctx.fillStyle = "rgba(251,248,239,0.54)";
+        ctx.font = "700 32px Courier New";
+        ctx.fillText("TOURVAULT", 34, 160);
+        ctx.fillStyle = signal;
+        ctx.font = "700 14px Courier New";
+        ctx.fillText("HIDDEN TRACKER POCKET", 36, 188);
+        ctx.restore();
+      }
+
+      const drawers = {
+        usb: drawUsb,
+        qr: drawQr,
+        nfc: drawNfc,
+        labels: drawLabels,
+        pouch: drawPouch,
+      };
+
+      function drawItemTitle(item, alpha) {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        const x = 808;
+        const y = 182;
+        glow(signal, 14);
+        ctx.strokeStyle = "rgba(199,255,74,0.72)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x, y, 320, 80);
+        clearGlow();
+        ctx.fillStyle = "rgba(5,9,7,0.72)";
+        ctx.fillRect(x, y, 320, 80);
+        ctx.fillStyle = signal;
+        ctx.font = "700 18px Courier New";
+        ctx.fillText(item.title, x + 18, y + 33);
+        ctx.fillStyle = "rgba(251,248,239,0.76)";
+        ctx.font = "700 11px Courier New";
+        ctx.fillText(item.subtitle, x + 18, y + 56);
+        ctx.strokeStyle = signal;
+        ctx.beginPath();
+        ctx.moveTo(x - 58, y + 41);
+        ctx.lineTo(x, y + 41);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function drawTray(introduced) {
+        const trayY = 588;
+        ctx.save();
+        ctx.fillStyle = "rgba(5,9,7,0.82)";
+        ctx.fillRect(156, trayY - 34, 968, 68);
+        ctx.strokeStyle = "rgba(199,255,74,0.3)";
+        ctx.strokeRect(156, trayY - 34, 968, 68);
+        ctx.font = "700 10px Courier New";
+        ctx.fillStyle = "rgba(251,248,239,0.62)";
+        ctx.fillText("INTRODUCED COMPONENTS", 176, trayY - 10);
+        const slots = [
+          [332, trayY + 4, 0.38, -0.05],
+          [480, trayY + 4, 0.28, 0.03],
+          [632, trayY + 4, 0.28, -0.02],
+          [792, trayY + 4, 0.32, 0.01],
+          [974, trayY + 4, 0.24, 0.02],
+        ];
+        revealItems.forEach((item, itemIndex) => {
+          if (introduced <= itemIndex) return;
+          const alpha = smooth(introduced - itemIndex);
+          const [x, y, scale, rotation] = slots[itemIndex];
+          withObject(x, y, scale, rotation, alpha, drawers[item.id]);
+        });
+        ctx.restore();
+      }
+
+      function drawFinalLayout(alpha) {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = "rgba(5,9,7,0.68)";
+        roundedRect(174, 135, 932, 390, 12);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(199,255,74,0.46)";
+        ctx.stroke();
+        withObject(454, 336, 0.88, -0.02, 1, drawPouch);
+        withObject(806, 240, 0.62, 0.07, 1, drawUsb);
+        withObject(846, 376, 0.54, -0.05, 1, drawNfc);
+        withObject(995, 368, 0.48, 0.04, 1, drawQr);
+        withObject(872, 498, 0.5, -0.03, 1, drawLabels);
+        ctx.fillStyle = signal;
+        ctx.font = "700 16px Courier New";
+        ctx.fillText("FOUNDER KIT LAYOUT LOCKED", 220, 172);
+        ctx.fillStyle = "rgba(251,248,239,0.68)";
+        ctx.font = "700 11px Courier New";
+        ctx.fillText("POUCH / USB-SD / NFC / QR / INVENTORY LABELS / RECOVERY PAGE", 220, 195);
+        ctx.restore();
+      }
+
+      function drawActiveItem(item, reveal, exit, finalAlpha) {
+        const activeAlpha = clamp(reveal * (1 - exit) * (1 - finalAlpha));
+        if (activeAlpha <= 0.01) return;
+        const pulse = Math.sin(reveal * Math.PI) * 0.06;
+        const x = lerp(470, 560, easeOut(reveal));
+        const y = 346 + Math.sin(reveal * Math.PI * 2) * 5;
+        const scale = 1 + pulse;
+        withObject(x, y, scale, item.id === "qr" ? -0.05 : 0.03, activeAlpha, drawers[item.id]);
+        drawItemTitle(item, activeAlpha);
+      }
+
+      function getTimeline(seconds) {
+        const t = ((seconds % duration) + duration) % duration;
+        const finalStart = 9.45;
+        const finalAlpha = smooth((t - finalStart) / 0.65);
+        const lineTop = 118;
+        const lineBottom = finalAlpha > 0.95 ? 604 : 598;
+        const cycle = 1.75;
+        const activeIndex = Math.min(Math.floor(t / cycle), revealItems.length - 1);
+        const phase = (t - activeIndex * cycle) / cycle;
+        const goingDown = phase >= 0.32;
+        const scanProgress = goingDown ? smooth((phase - 0.32) / 0.58) : 1 - smooth(phase / 0.32);
+        const scanY = lerp(lineTop, lineBottom, finalAlpha > 0.95 ? 1 : scanProgress);
+        const reveal = goingDown ? smooth((phase - 0.4) / 0.34) : 0;
+        const exit = smooth((phase - 0.82) / 0.16);
+        const introduced = finalAlpha > 0.05 ? revealItems.length : activeIndex + reveal;
+        return { t, activeIndex, scanY, reveal, exit, introduced, finalAlpha };
+      }
+
+      function drawFrameAt(seconds) {
+        const timeline = getTimeline(seconds);
+        drawGrid(timeline.t);
+        const frame = drawFrame(timeline.scanY, timeline.finalAlpha > 0.85);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(frame.x, frame.y, frame.w, frame.h);
+        ctx.clip();
+        drawTray(timeline.introduced);
+        drawActiveItem(revealItems[timeline.activeIndex], timeline.reveal, timeline.exit, timeline.finalAlpha);
+        drawFinalLayout(timeline.finalAlpha);
+        ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = signal;
+        ctx.font = "700 12px Courier New";
+        ctx.fillText("PROTOTYPE REVEAL SEQUENCE", 112, 678);
+        ctx.fillStyle = "rgba(251,248,239,0.68)";
+        ctx.fillText("LOOPS AFTER FINAL KIT HOLD", 922, 678);
+        ctx.restore();
+      }
+
+      function renderFrame(seconds) {
+        drawFrameAt(seconds);
+      }
+
+      window.renderFrame = renderFrame;
+      window.__roadVaultReady = true;
+
+      const captureMode = new URLSearchParams(window.location.search).has("capture");
+      const started = performance.now();
+      function animate(now) {
+        renderFrame((now - started) / 1000);
+        requestAnimationFrame(animate);
+      }
+
+      if (captureMode) {
+        renderFrame(0);
+      } else {
+        requestAnimationFrame(animate);
+      }
+    </script>
+  </body>
+</html>

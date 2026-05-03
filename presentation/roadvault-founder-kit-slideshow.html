@@ -1,0 +1,1221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RoadVault Founder Kit Presentation</title>
+    <meta
+      name="description"
+      content="A cinematic RoadVault Founder Kit slideshow showing the recovery pouch, QR label, NFC card, creator labels, and tracker-compatible kit."
+    />
+    <meta name="theme-color" content="#050704" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@500;600;700;800&family=Bricolage+Grotesque:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,500;8..60,650&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #050704;
+        --iron: #111710;
+        --panel: rgba(8, 13, 9, 0.82);
+        --panel-strong: rgba(5, 9, 7, 0.92);
+        --signal: #c7ff4a;
+        --paper: #fbf8ef;
+        --muted: rgba(251, 248, 239, 0.68);
+        --copper: #b65f3f;
+        --cyan: #7ee0ff;
+        --line: rgba(199, 255, 74, 0.28);
+        --line-hot: rgba(199, 255, 74, 0.54);
+        --display: "Bricolage Grotesque", "Franklin Gothic Medium", sans-serif;
+        --body: "Source Serif 4", Georgia, serif;
+        --mono: "Azeret Mono", "Courier New", monospace;
+        --radius: 8px;
+        --shadow: 0 34px 100px rgba(0, 0, 0, 0.62);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+        background: var(--ink);
+        color: var(--paper);
+        font-family: var(--body);
+      }
+
+      body {
+        overflow: hidden;
+      }
+
+      button,
+      a {
+        color: inherit;
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--signal);
+        outline-offset: 4px;
+      }
+
+      .deck {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        background:
+          linear-gradient(90deg, rgba(199, 255, 74, 0.09) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(199, 255, 74, 0.052) 1px, transparent 1px),
+          linear-gradient(132deg, rgba(182, 95, 63, 0.13), transparent 38%),
+          conic-gradient(from 180deg at 58% 46%, rgba(126, 224, 255, 0.12), transparent 22%, rgba(199, 255, 74, 0.08), transparent 62%),
+          #050704;
+        background-size: 44px 44px, 44px 44px, 100% 100%, 100% 100%, 100% 100%;
+      }
+
+      .deck::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(180deg, rgba(5, 7, 4, 0.32), transparent 20%, transparent 72%, rgba(5, 7, 4, 0.68)),
+          repeating-linear-gradient(0deg, transparent 0 7px, rgba(199, 255, 74, 0.026) 8px),
+          repeating-linear-gradient(90deg, transparent 0 180px, rgba(251, 248, 239, 0.025) 181px 182px);
+        z-index: 4;
+      }
+
+      .deck::after {
+        content: "";
+        position: absolute;
+        inset: -10%;
+        pointer-events: none;
+        background:
+          linear-gradient(
+            110deg,
+            transparent 0 20%,
+            rgba(126, 224, 255, 0.05) 34%,
+            rgba(199, 255, 74, 0.09) 50%,
+            rgba(126, 224, 255, 0.04) 66%,
+            transparent 80% 100%
+          );
+        filter: blur(28px);
+        opacity: 0.7;
+        transform: translate3d(-24%, 0, 0);
+        animation: gridHueTravel 18s linear infinite;
+        z-index: 0;
+      }
+
+      .deck-topbar {
+        position: fixed;
+        top: clamp(16px, 2.6vw, 34px);
+        right: clamp(18px, 3vw, 46px);
+        left: clamp(18px, 3vw, 46px);
+        z-index: 8;
+        display: grid;
+        grid-template-columns: auto minmax(160px, 1fr) auto;
+        gap: clamp(14px, 2vw, 28px);
+        align-items: center;
+        pointer-events: none;
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .deck-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--paper);
+      }
+
+      .deck-badge {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        color: var(--ink);
+        background: var(--signal);
+        border: 1px solid var(--line-hot);
+        box-shadow: 4px 4px 0 rgba(199, 255, 74, 0.18);
+      }
+
+      .deck-progress {
+        height: 3px;
+        overflow: hidden;
+        background: rgba(251, 248, 239, 0.12);
+        box-shadow: 0 0 0 1px rgba(199, 255, 74, 0.12);
+      }
+
+      .deck-progress span {
+        display: block;
+        width: 14.285%;
+        height: 100%;
+        background: linear-gradient(90deg, var(--signal), var(--cyan));
+        box-shadow: 0 0 24px rgba(199, 255, 74, 0.44);
+        transition: width 260ms ease;
+      }
+
+      .deck-context {
+        color: rgba(251, 248, 239, 0.66);
+      }
+
+      @keyframes gridHueTravel {
+        0% {
+          transform: translate3d(-24%, 0, 0);
+        }
+
+        50% {
+          transform: translate3d(8%, 0, 0);
+        }
+
+        100% {
+          transform: translate3d(34%, 0, 0);
+        }
+      }
+
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: minmax(320px, 0.9fr) minmax(420px, 1.1fr);
+        gap: clamp(24px, 5vw, 72px);
+        align-items: center;
+        overflow: hidden;
+        padding: clamp(78px, 8vw, 108px) clamp(34px, 6vw, 82px) clamp(76px, 7vw, 104px);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(28px) scale(0.982);
+        transition:
+          opacity 360ms ease,
+          transform 420ms cubic-bezier(0.2, 0.78, 0.18, 1),
+          visibility 360ms ease;
+        z-index: 1;
+      }
+
+      .slide::before {
+        content: "";
+        position: absolute;
+        inset: clamp(68px, 7vw, 98px) clamp(18px, 3vw, 42px) clamp(68px, 7vw, 94px);
+        border: 1px solid rgba(199, 255, 74, 0.1);
+        pointer-events: none;
+      }
+
+      .slide[data-active="true"] {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0) scale(1);
+        z-index: 2;
+      }
+
+      .slide.full-media {
+        grid-template-columns: 1fr;
+        padding: clamp(72px, 7vw, 96px) clamp(24px, 4vw, 48px) clamp(70px, 7vw, 92px);
+      }
+
+      .slide.hero-reveal {
+        grid-template-columns: minmax(340px, 0.72fr) minmax(620px, 1.28fr);
+      }
+
+      .content {
+        position: relative;
+        z-index: 2;
+        max-width: 640px;
+      }
+
+      .slide .content,
+      .slide .media,
+      .slide .rail,
+      .slide .video-wrap {
+        opacity: 0;
+        transform: translateY(18px);
+        transition:
+          opacity 420ms ease,
+          transform 520ms cubic-bezier(0.2, 0.78, 0.18, 1);
+      }
+
+      .slide .media,
+      .slide .rail,
+      .slide .video-wrap {
+        transition-delay: 70ms;
+      }
+
+      .slide[data-active="true"] .content,
+      .slide[data-active="true"] .media,
+      .slide[data-active="true"] .rail,
+      .slide[data-active="true"] .video-wrap {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .eyebrow,
+      .mono-label,
+      .stat,
+      .nav,
+      .counter {
+        font-family: var(--mono);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow {
+        color: var(--signal);
+        font-size: clamp(12px, 1.15vw, 14px);
+        margin-bottom: 18px;
+        text-shadow: 0 0 16px rgba(199, 255, 74, 0.54);
+      }
+
+      h1,
+      h2 {
+        margin: 0;
+        max-width: 14ch;
+        color: var(--paper);
+        font-family: var(--display);
+        font-weight: 780;
+        letter-spacing: 0;
+        line-height: 0.96;
+      }
+
+      h1 {
+        max-width: 15ch;
+        font-size: clamp(48px, 7vw, 86px);
+      }
+
+      h2 {
+        max-width: 13.5ch;
+        font-size: clamp(38px, 5vw, 72px);
+      }
+
+      p {
+        margin: 20px 0 0;
+        max-width: 54ch;
+        color: var(--muted);
+        font-size: clamp(17px, 1.45vw, 22px);
+        line-height: 1.36;
+      }
+
+      .micro {
+        color: var(--signal);
+        font-family: var(--mono);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        line-height: 1.5;
+        text-transform: uppercase;
+      }
+
+      .media {
+        position: relative;
+        min-height: min(56vw, 620px);
+        overflow: hidden;
+        border: 1px solid var(--line-hot);
+        background:
+          linear-gradient(135deg, rgba(199, 255, 74, 0.08), transparent 32%),
+          rgba(3, 6, 4, 0.82);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+        box-shadow:
+          0 0 0 1px rgba(126, 224, 255, 0.08) inset,
+          var(--shadow);
+      }
+
+      .media::before,
+      .video-wrap::before {
+        content: attr(data-tag);
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 2;
+        padding: 7px 9px;
+        color: var(--signal);
+        background: rgba(5, 9, 7, 0.72);
+        border: 1px solid rgba(199, 255, 74, 0.28);
+        font-family: var(--mono);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .media::after,
+      .video-wrap::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(90deg, rgba(251, 248, 239, 0.16) 1px, transparent 1px) 0 0 / 100% 100%,
+          linear-gradient(0deg, rgba(251, 248, 239, 0.16) 1px, transparent 1px) 0 0 / 100% 100%;
+        opacity: 0.28;
+      }
+
+      .media img,
+      .media video {
+        width: 100%;
+        height: 100%;
+        min-height: inherit;
+        display: block;
+        object-fit: cover;
+      }
+
+      .media.media-wide {
+        aspect-ratio: 16 / 9;
+        min-height: 0;
+      }
+
+      .media.media-wide img,
+      .media.media-wide video {
+        height: 100%;
+        min-height: 0;
+      }
+
+      .prototype-reveal {
+        isolation: isolate;
+      }
+
+      .prototype-reveal .kit-reveal-loop {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        opacity: 0.14;
+        mix-blend-mode: screen;
+        filter: saturate(1.2) contrast(1.15);
+      }
+
+      .prototype-photo {
+        position: relative;
+        z-index: 1;
+        filter: contrast(1.04) saturate(0.94);
+        transform: scale(1.055) translate3d(-1.5%, 0, 0);
+      }
+
+      .slide[data-active="true"] .prototype-photo {
+        animation: prototypeDrift 12s ease-in-out infinite alternate;
+      }
+
+      .prototype-reveal::after {
+        opacity: 0.34;
+        z-index: 4;
+      }
+
+      .prototype-scan {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        background:
+          linear-gradient(
+            180deg,
+            transparent 0 36%,
+            rgba(199, 255, 74, 0.08) 42%,
+            rgba(199, 255, 74, 0.54) 48%,
+            rgba(126, 224, 255, 0.18) 51%,
+            transparent 58% 100%
+          );
+        mix-blend-mode: screen;
+        transform: translateY(-115%);
+      }
+
+      .slide[data-active="true"] .prototype-scan {
+        animation: prototypeScan 4.6s cubic-bezier(0.55, 0, 0.2, 1) infinite;
+      }
+
+      .prototype-hotspots {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+        font-family: var(--mono);
+        font-size: clamp(8px, 0.78vw, 11px);
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .prototype-hotspots span {
+        position: absolute;
+        display: inline-flex;
+        align-items: center;
+        min-height: 26px;
+        padding: 6px 8px;
+        color: var(--signal);
+        background: rgba(5, 9, 7, 0.82);
+        border: 1px solid rgba(199, 255, 74, 0.5);
+        box-shadow:
+          0 0 0 1px rgba(5, 7, 4, 0.82),
+          0 0 24px rgba(199, 255, 74, 0.18);
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      .prototype-hotspots span::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        margin-right: 7px;
+        background: var(--signal);
+        box-shadow: 0 0 14px rgba(199, 255, 74, 0.7);
+      }
+
+      .slide[data-active="true"] .prototype-hotspots span {
+        animation: hotspotReveal 6.8s ease-in-out infinite;
+      }
+
+      .prototype-hotspots span:nth-child(1) {
+        top: 16%;
+        left: 8%;
+        animation-delay: 0.25s;
+      }
+
+      .prototype-hotspots span:nth-child(2) {
+        top: 61%;
+        left: 12%;
+        animation-delay: 0.8s;
+      }
+
+      .prototype-hotspots span:nth-child(3) {
+        top: 26%;
+        right: 13%;
+        animation-delay: 1.35s;
+      }
+
+      .prototype-hotspots span:nth-child(4) {
+        right: 5%;
+        bottom: 17%;
+        animation-delay: 1.9s;
+      }
+
+      .prototype-hotspots span:nth-child(5) {
+        left: 42%;
+        bottom: 14%;
+        animation-delay: 2.45s;
+      }
+
+      @keyframes prototypeDrift {
+        0% {
+          transform: scale(1.055) translate3d(-1.5%, 0, 0);
+        }
+
+        100% {
+          transform: scale(1.09) translate3d(1.5%, -1.25%, 0);
+        }
+      }
+
+      @keyframes prototypeScan {
+        0% {
+          transform: translateY(-115%);
+        }
+
+        48%,
+        100% {
+          transform: translateY(115%);
+        }
+      }
+
+      @keyframes hotspotReveal {
+        0%,
+        9% {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+
+        16%,
+        70% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        88%,
+        100% {
+          opacity: 0;
+          transform: translateY(-5px);
+        }
+      }
+
+      .video-wrap {
+        position: relative;
+        height: calc(100vh - clamp(48px, 8vw, 96px));
+        overflow: hidden;
+        border: 1px solid var(--line-hot);
+        background: #030503;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%);
+        box-shadow: var(--shadow);
+      }
+
+      .video-wrap video {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      .overlay-title {
+        position: absolute;
+        left: clamp(28px, 4vw, 56px);
+        bottom: clamp(26px, 4vw, 52px);
+        max-width: min(620px, 70vw);
+        z-index: 3;
+      }
+
+      .overlay-title h2 {
+        max-width: 13ch;
+        text-shadow: 0 18px 56px rgba(0, 0, 0, 0.7);
+      }
+
+      .rail {
+        display: grid;
+        gap: 12px;
+        margin-top: 28px;
+        padding: clamp(16px, 2.3vw, 28px);
+        border: 1px solid rgba(199, 255, 74, 0.18);
+        background:
+          linear-gradient(90deg, rgba(251, 248, 239, 0.035) 1px, transparent 1px),
+          rgba(5, 9, 7, 0.52);
+        background-size: 28px 28px, auto;
+        box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+      }
+
+      .text-panels {
+        display: grid;
+        gap: 14px;
+      }
+
+      .perk {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 14px;
+        align-items: start;
+        padding: 16px;
+        border: 1px solid rgba(199, 255, 74, 0.18);
+        background: rgba(5, 9, 7, 0.48);
+      }
+
+      .perk:last-child {
+        border-bottom: 1px solid rgba(199, 255, 74, 0.18);
+      }
+
+      .mark {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        color: var(--ink);
+        background: var(--signal);
+        font-family: var(--mono);
+        font-size: 14px;
+        font-weight: 900;
+        box-shadow: 0 0 22px rgba(199, 255, 74, 0.48);
+      }
+
+      .perk strong {
+        display: block;
+        color: var(--paper);
+        font-size: clamp(18px, 1.7vw, 23px);
+        line-height: 1.1;
+      }
+
+      .perk span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: clamp(14px, 1.2vw, 17px);
+        line-height: 1.42;
+      }
+
+      .kit-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .mono-label {
+        min-height: 106px;
+        padding: 14px;
+        border: 1px solid rgba(199, 255, 74, 0.48);
+        background: rgba(5, 9, 7, 0.7);
+        color: var(--signal);
+        font-size: 13px;
+        line-height: 1.35;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+        box-shadow: 0 0 22px rgba(199, 255, 74, 0.16);
+      }
+
+      .mono-label small {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 10px;
+      }
+
+      @keyframes ctaGlowPulse {
+        0%,
+        100% {
+          box-shadow:
+            0 0 0 1px rgba(199, 255, 74, 0.28) inset,
+            0 0 18px rgba(199, 255, 74, 0.26),
+            0 0 34px rgba(199, 255, 74, 0.12);
+          transform: translateY(0);
+        }
+
+        50% {
+          box-shadow:
+            0 0 0 1px rgba(199, 255, 74, 0.44) inset,
+            0 0 28px rgba(199, 255, 74, 0.42),
+            0 0 52px rgba(199, 255, 74, 0.2);
+          transform: translateY(-1px);
+        }
+      }
+
+      .cta {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 52px;
+        margin-top: 30px;
+        padding: 0 22px;
+        color: #071006;
+        background: var(--signal);
+        font-family: var(--mono);
+        font-size: 14px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+        text-transform: uppercase;
+        border: 1px solid rgba(199, 255, 74, 0.58);
+        box-shadow:
+          0 0 0 1px rgba(199, 255, 74, 0.28) inset,
+          0 0 18px rgba(199, 255, 74, 0.26),
+          0 0 34px rgba(199, 255, 74, 0.12);
+        animation: ctaGlowPulse 2.3s ease-in-out infinite;
+        transition:
+          transform 180ms ease,
+          box-shadow 180ms ease,
+          filter 180ms ease;
+      }
+
+      .cta:hover,
+      .cta:focus-visible {
+        filter: brightness(1.03);
+        transform: translateY(-2px);
+        box-shadow:
+          0 0 0 1px rgba(199, 255, 74, 0.48) inset,
+          0 0 32px rgba(199, 255, 74, 0.48),
+          0 0 58px rgba(199, 255, 74, 0.22);
+      }
+
+      .stat-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 34px;
+      }
+
+      .stat {
+        padding: 16px;
+        border: 1px solid rgba(126, 224, 255, 0.34);
+        color: var(--cyan);
+        font-size: 12px;
+        line-height: 1.4;
+        background: rgba(126, 224, 255, 0.055);
+      }
+
+      .stat strong {
+        display: block;
+        color: var(--paper);
+        font-family: var(--display);
+        font-size: clamp(23px, 3vw, 42px);
+        letter-spacing: 0;
+        line-height: 1;
+        text-transform: none;
+      }
+
+      .why-slide {
+        grid-template-columns: minmax(320px, 0.82fr) minmax(420px, 1.18fr);
+      }
+
+      .why-slide .content {
+        max-width: 560px;
+      }
+
+      .why-slide .rail {
+        gap: 0;
+        margin-top: 0;
+      }
+
+      .why-slide .text-panels .perk {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 18px 0;
+      }
+
+      .why-slide .text-panels .perk strong {
+        font-size: clamp(20px, 1.9vw, 28px);
+      }
+
+      .why-slide .text-panels .perk span {
+        max-width: 44ch;
+        font-size: clamp(15px, 1.22vw, 18px);
+      }
+
+      .why-slide .mark,
+      .why-slide .stat-row {
+        display: none;
+      }
+
+      .why-slide .micro {
+        margin-top: 26px;
+        color: rgba(126, 224, 255, 0.84);
+      }
+
+      .nav {
+        position: fixed;
+        right: clamp(22px, 3vw, 44px);
+        bottom: clamp(18px, 3vw, 34px);
+        display: flex;
+        gap: 10px;
+        z-index: 8;
+      }
+
+      .nav button {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border: 1px solid var(--line-hot);
+        background: var(--panel-strong);
+        color: var(--signal);
+        cursor: pointer;
+        font-size: 22px;
+        line-height: 1;
+        box-shadow: 0 0 24px rgba(199, 255, 74, 0.16);
+        transition:
+          transform 160ms ease,
+          background 160ms ease,
+          color 160ms ease;
+      }
+
+      .nav button:hover {
+        color: var(--ink);
+        background: var(--signal);
+        transform: translateY(-2px);
+      }
+
+      .slide-dots {
+        position: fixed;
+        right: 50%;
+        bottom: clamp(24px, 3vw, 42px);
+        z-index: 8;
+        display: flex;
+        gap: 8px;
+        transform: translateX(50%);
+      }
+
+      .slide-dots button {
+        width: 34px;
+        height: 6px;
+        padding: 0;
+        overflow: hidden;
+        color: transparent;
+        border: 0;
+        background: rgba(251, 248, 239, 0.24);
+        cursor: pointer;
+        transition:
+          width 180ms ease,
+          background 180ms ease,
+          box-shadow 180ms ease;
+      }
+
+      .slide-dots button[aria-current="true"] {
+        width: 54px;
+        background: var(--signal);
+        box-shadow: 0 0 18px rgba(199, 255, 74, 0.52);
+      }
+
+      .counter {
+        position: fixed;
+        left: clamp(22px, 3vw, 44px);
+        bottom: clamp(22px, 3vw, 38px);
+        z-index: 8;
+        color: rgba(251, 248, 239, 0.72);
+        font-size: 12px;
+      }
+
+      .accent {
+        color: var(--signal);
+      }
+
+      .copper {
+        color: var(--copper);
+      }
+
+      @media (max-width: 860px) {
+        body {
+          overflow: auto;
+        }
+
+        .deck {
+          min-height: 100vh;
+          height: auto;
+        }
+
+        .slide,
+        .slide.full-media {
+          position: relative;
+          min-height: 100vh;
+          grid-template-columns: 1fr;
+          padding: 28px 20px 92px;
+          display: none;
+          transform: none;
+        }
+
+        .slide::before {
+          inset: 72px 14px 74px;
+        }
+
+        .slide[data-active="true"] {
+          display: grid;
+        }
+
+        .deck-topbar {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .deck-context {
+          display: none;
+        }
+
+        .media,
+        .video-wrap {
+          min-height: 320px;
+          height: auto;
+        }
+
+        .prototype-hotspots span {
+          font-size: 8px;
+        }
+
+        .prototype-hotspots span:nth-child(3),
+        .prototype-hotspots span:nth-child(4),
+        .prototype-hotspots span:nth-child(5) {
+          display: none;
+        }
+
+        .slide-dots {
+          right: auto;
+          left: 20px;
+          bottom: 28px;
+          max-width: calc(100% - 136px);
+          transform: none;
+        }
+
+        .slide-dots button {
+          width: 20px;
+        }
+
+        .slide-dots button[aria-current="true"] {
+          width: 36px;
+        }
+
+        .counter {
+          bottom: 60px;
+        }
+
+        .kit-grid,
+        .stat-row {
+          grid-template-columns: 1fr;
+        }
+
+        .overlay-title {
+          position: static;
+          max-width: 100%;
+          padding: 22px 0 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="deck" aria-live="polite">
+      <div class="deck-topbar" aria-hidden="true">
+        <div class="deck-brand">
+          <span class="deck-badge">RV</span>
+          <span>RoadVault Founder Kit</span>
+        </div>
+        <div class="deck-progress"><span id="progressBar"></span></div>
+        <div class="deck-context">Campaign reveal deck</div>
+      </div>
+
+      <section class="slide hero-reveal" data-active="true">
+        <div class="content">
+          <div class="eyebrow">RoadVault / Founder Kit</div>
+          <h1>Real prototypes, layer by layer.</h1>
+          <p>
+            The full RoadVault system now shows up as physical gear: pouch, vault case, labels,
+            NFC return card, QR recovery sheet, and the future Smart SSD.
+          </p>
+          <a class="cta" href="../index.html#waitlist">Join founder kit list</a>
+        </div>
+        <figure class="media media-wide prototype-reveal" data-tag="Layered prototype reveal">
+          <video
+            class="kit-reveal-loop"
+            src="assets/roadvault-founder-kit-item-reveal.mp4"
+            poster="assets/founder-kit-reveal-final-layout.png"
+            autoplay
+            muted
+            loop
+            playsinline
+            aria-hidden="true"
+          ></video>
+          <img
+            class="prototype-photo"
+            src="assets/roadvault-product-family-prototypes.png"
+            alt="Realistic RoadVault product prototypes including tech pouch, USB and SD vault, NFC lost card, QR recovery labels, creator inventory labels, and SessionVault Smart SSD"
+          />
+          <div class="prototype-scan" aria-hidden="true"></div>
+          <div class="prototype-hotspots" aria-hidden="true">
+            <span>TourVault pouch</span>
+            <span>SetVault case</span>
+            <span>QR recovery</span>
+            <span>Smart SSD</span>
+            <span>Creator labels</span>
+          </div>
+        </figure>
+      </section>
+
+      <section class="slide why-slide">
+        <div class="content">
+          <div class="eyebrow">Why it matters</div>
+          <h2>Small loss. Huge interruption.</h2>
+          <p>
+            USBs, SD cards, adapters, pouches, and drives are not accessories when they carry a
+            set, shoot, stem folder, client handoff, or tour file.
+          </p>
+          <div class="micro">The smaller the object, the easier it is to lose and the harder it can hit.</div>
+        </div>
+        <div class="rail">
+          <div class="text-panels">
+            <div class="perk">
+              <div><strong>Make the gear identifiable.</strong><span>Labels, QR recovery, and owner pages reduce friction when someone honest finds it.</span></div>
+            </div>
+            <div class="perk">
+              <div><strong>Add tracking without new electronics.</strong><span>Compatible with common item trackers, including AirTag, Tile, Chipolo, Pebblebee, and Android-style tracker networks.</span></div>
+            </div>
+            <div class="perk">
+              <div><strong>Validate the ecosystem first.</strong><span>The Founder Kit proves creator demand before a smart SSD becomes a manufacturing commitment.</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="eyebrow">Inside the kit</div>
+          <h2>Built around recovery, not novelty.</h2>
+          <p>
+            The first RoadVault product keeps the promise practical: make important small gear
+            easier to identify, return, and track.
+          </p>
+          <div class="kit-grid">
+            <div class="mono-label">TOURVAULT TECH POUCH<small>tracker-compatible carry core</small></div>
+            <div class="mono-label">SETVAULT USB/SD VAULT<small>small media, high consequence</small></div>
+            <div class="mono-label">NFC LOST CARD<small>tap to contact owner</small></div>
+            <div class="mono-label">QR RECOVERY LABEL<small>scan for return page</small></div>
+          </div>
+        </div>
+        <figure class="media" data-tag="Physical prototype family">
+          <img src="assets/roadvault-product-family-prototypes.png" alt="RoadVault physical product prototype family arranged on a dark workbench" />
+        </figure>
+      </section>
+
+      <section class="slide full-media">
+        <div class="video-wrap" data-tag="WebGL product orbit">
+          <video
+            src="assets/roadvault-founder-kit-webgl.mp4"
+            poster="assets/founder-kit-floating-components.png"
+            autoplay
+            muted
+            loop
+            playsinline
+          ></video>
+          <div class="overlay-title">
+            <div class="eyebrow">Generated WebGL cinematic</div>
+            <h2>360 pouch. Floating recovery system.</h2>
+            <p>USB vault, NFC card, and QR label orbit the pouch as labeled recovery points.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="eyebrow">Hidden tracker pocket</div>
+          <h2>The quiet feature that makes the kit feel serious.</h2>
+          <p>
+            The tracker pocket is not the headline gimmick. It is the thing that makes the pouch
+            behave like a recovery object instead of another bag.
+          </p>
+          <div class="rail">
+            <div class="perk">
+              <div class="mark">XR</div>
+              <div><strong>X-ray reveal.</strong><span>The presentation shows the hidden pocket without exposing the real construction path.</span></div>
+            </div>
+            <div class="perk">
+              <div class="mark">ID</div>
+              <div><strong>Owner signal layer.</strong><span>NFC, QR, and labels create a human return path when tracking alone is not enough.</span></div>
+            </div>
+          </div>
+        </div>
+        <figure class="media" data-tag="Hidden tracker pocket">
+          <img src="assets/founder-kit-xray-hidden-pocket.png" alt="RoadVault hidden tracker pocket x-ray render" />
+        </figure>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="eyebrow">Founder signup perks</div>
+          <h2>Why join before the campaign.</h2>
+          <p>
+            The waitlist should feel like access, not a mailing list. Every signup helps decide
+            the first run, the launch price, and which creator workflows matter most.
+          </p>
+        </div>
+        <div class="rail">
+          <div class="perk">
+            <div class="mark">01</div>
+            <div><strong>Founder price test access.</strong><span>See early pricing windows before the public campaign page is locked.</span></div>
+          </div>
+          <div class="perk">
+            <div class="mark">02</div>
+            <div><strong>Shape the first kit.</strong><span>Vote on pouch size, label set, tracker pocket placement, and recovery page details.</span></div>
+          </div>
+          <div class="perk">
+            <div class="mark">03</div>
+            <div><strong>Early recovery page setup.</strong><span>Founder users can test the owner contact flow before RoadVault scales it.</span></div>
+          </div>
+          <div class="perk">
+            <div class="mark">04</div>
+            <div><strong>Smart SSD roadmap signal.</strong><span>Help prove whether SessionVault should follow the kit or become the flagship first.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="content">
+          <div class="eyebrow">Campaign positioning</div>
+          <h2>Fund the kit. Prove the system. Build the vault.</h2>
+          <p>
+            RoadVault starts with the Founder Kit because it can ship without electronics. The
+            SessionVault Smart SSD stays visible as the future flagship.
+          </p>
+          <a class="cta" href="../index.html#waitlist">Join founder kit list</a>
+        </div>
+        <div class="rail">
+          <div class="perk">
+            <div class="mark">A</div>
+            <div><strong>Immediate campaign product.</strong><span>Practical, lower manufacturing risk, strong creator use case.</span></div>
+          </div>
+          <div class="perk">
+            <div class="mark">B</div>
+            <div><strong>Future flagship story.</strong><span>The Smart SSD becomes the roadmap, not the manufacturing burden on day one.</span></div>
+          </div>
+          <div class="perk">
+            <div class="mark">C</div>
+            <div><strong>Premium but grounded.</strong><span>High-tech recovery language with a real product path creators can understand fast.</span></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="counter" aria-hidden="true"><span id="current">01</span> / 07</div>
+    <div class="slide-dots" id="slideDots" aria-label="Slide picker"></div>
+    <nav class="nav" aria-label="Slide navigation">
+      <button type="button" id="prev" aria-label="Previous slide">&lt;</button>
+      <button type="button" id="next" aria-label="Next slide">&gt;</button>
+    </nav>
+
+    <script>
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const current = document.querySelector("#current");
+      const progressBar = document.querySelector("#progressBar");
+      const slideDots = document.querySelector("#slideDots");
+      const prev = document.querySelector("#prev");
+      const next = document.querySelector("#next");
+      let index = 0;
+      let touchStartX = null;
+
+      const dots = slides.map((slide, slideIndex) => {
+        const button = document.createElement("button");
+        const label = slide.querySelector(".eyebrow")?.textContent?.trim() || `Slide ${slideIndex + 1}`;
+        button.type = "button";
+        button.textContent = String(slideIndex + 1).padStart(2, "0");
+        button.setAttribute("aria-label", `Go to ${label}`);
+        button.addEventListener("click", () => setSlide(slideIndex));
+        slideDots.append(button);
+        return button;
+      });
+
+      function setSlide(nextIndex) {
+        index = (nextIndex + slides.length) % slides.length;
+        slides.forEach((slide, slideIndex) => {
+          const isActive = slideIndex === index;
+          slide.dataset.active = String(isActive);
+          slide.setAttribute("aria-hidden", String(!isActive));
+          const video = slide.querySelector("video");
+          if (!video) return;
+          if (isActive) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+        current.textContent = String(index + 1).padStart(2, "0");
+        progressBar.style.width = `${((index + 1) / slides.length) * 100}%`;
+        dots.forEach((dot, dotIndex) => {
+          dot.setAttribute("aria-current", String(dotIndex === index));
+        });
+      }
+
+      prev.addEventListener("click", () => setSlide(index - 1));
+      next.addEventListener("click", () => setSlide(index + 1));
+      document.addEventListener("keydown", (event) => {
+        if (["A", "BUTTON"].includes(event.target.tagName)) return;
+        if (event.key === "ArrowRight" || event.key === " ") setSlide(index + 1);
+        if (event.key === "ArrowLeft") setSlide(index - 1);
+      });
+      document.querySelector(".deck").addEventListener("pointerdown", (event) => {
+        touchStartX = event.clientX;
+      });
+      document.querySelector(".deck").addEventListener("pointerup", (event) => {
+        if (touchStartX === null) return;
+        const deltaX = event.clientX - touchStartX;
+        touchStartX = null;
+        if (Math.abs(deltaX) < 48) return;
+        setSlide(index + (deltaX < 0 ? 1 : -1));
+      });
+
+      setSlide(0);
+    </script>
+  </body>
+</html>

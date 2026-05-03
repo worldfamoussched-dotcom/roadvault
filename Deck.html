@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RoadVault | Deck</title>
+    <meta
+      name="description"
+      content="RoadVault 12-panel investor deck for pre-POC fundraising conversations."
+    />
+    <meta name="theme-color" content="#050705" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #050705;
+        --panel: #0a0d09;
+        --panel-strong: #101510;
+        --text: #eef1e8;
+        --muted: #98a093;
+        --muted-2: #667063;
+        --signal: #b7ff2d;
+        --warning: #ff7a24;
+        --line: rgba(183, 255, 45, 0.14);
+        --line-strong: rgba(183, 255, 45, 0.34);
+        --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+        --shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(0deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          radial-gradient(circle at top right, rgba(183, 255, 45, 0.06), transparent 24%),
+          var(--bg);
+        background-size: 24px 24px, 24px 24px, auto, auto;
+        font-family: var(--mono);
+      }
+
+      a,
+      button {
+        color: inherit;
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        min-height: 72px;
+        padding: 0 22px;
+        background: rgba(5, 7, 5, 0.92);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(14px);
+      }
+
+      .brandline,
+      .nav-links,
+      .deck-actions,
+      .slide-foot,
+      .tile-foot {
+        display: flex;
+        align-items: center;
+      }
+
+      .brandline {
+        gap: 12px;
+        color: var(--text);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .brandline img {
+        width: 120px;
+        height: auto;
+      }
+
+      .nav-links {
+        gap: 18px;
+        color: var(--muted);
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .nav-links a {
+        padding: 10px 0;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+
+      .nav-links a:hover,
+      .nav-links a[aria-current="page"] {
+        color: var(--text);
+        border-color: var(--signal);
+      }
+
+      .deck-actions {
+        gap: 10px;
+      }
+
+      .top-action,
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 0 14px;
+        border: 1px solid var(--line);
+        background: rgba(0, 0, 0, 0.22);
+        text-decoration: none;
+        color: var(--text);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .top-action.primary,
+      .cta {
+        color: #0d1308;
+        background: var(--signal);
+        border-color: var(--signal);
+      }
+
+      .deck-shell {
+        width: min(1380px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 28px 0 48px;
+      }
+
+      .deck-intro {
+        display: grid;
+        gap: 18px;
+        padding: 22px 0 30px;
+      }
+
+      .deck-index,
+      .slide-index,
+      .tile span,
+      .disclosure {
+        color: var(--muted-2);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-weight: 600;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        max-width: 13ch;
+        font-size: clamp(38px, 5vw, 74px);
+        line-height: 0.96;
+      }
+
+      h2 {
+        max-width: 11ch;
+        font-size: clamp(34px, 4.2vw, 58px);
+        line-height: 0.98;
+      }
+
+      h3 {
+        font-size: 20px;
+        line-height: 1.12;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        font-size: clamp(15px, 1.15vw, 18px);
+        line-height: 1.45;
+      }
+
+      .deck-grid {
+        display: grid;
+        gap: 28px;
+      }
+
+      .deck-slide {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(300px, 0.82fr) minmax(380px, 1.18fr);
+        gap: 26px;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        min-height: 0;
+        padding: 28px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent), var(--panel);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .deck-slide::before {
+        content: "";
+        position: absolute;
+        inset: 16px;
+        border: 1px solid rgba(183, 255, 45, 0.08);
+        pointer-events: none;
+      }
+
+      .slide-content,
+      .slide-media {
+        position: relative;
+        z-index: 1;
+      }
+
+      .slide-index {
+        margin-bottom: 16px;
+      }
+
+      .slide-lede {
+        margin-top: 18px;
+        max-width: 48ch;
+      }
+
+      .media-panel,
+      .tile,
+      .quote,
+      .timeline article,
+      .product-line article,
+      .comparison article {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent), var(--panel-strong);
+        border: 1px solid var(--line);
+      }
+
+      .media-panel {
+        position: relative;
+        min-height: 100%;
+        overflow: hidden;
+      }
+
+      .media-panel img.bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.36) saturate(0.72);
+      }
+
+      .media-panel img.item {
+        position: absolute;
+        max-width: none;
+        filter: drop-shadow(0 22px 38px rgba(0, 0, 0, 0.5));
+      }
+
+      .media-panel img.item.pouch {
+        top: 12%;
+        left: 8%;
+        width: 32%;
+      }
+
+      .media-panel img.item.vault {
+        left: 14%;
+        bottom: 12%;
+        width: 26%;
+      }
+
+      .media-panel img.item.card {
+        top: 18%;
+        right: 18%;
+        width: 18%;
+      }
+
+      .media-panel img.item.ssd {
+        right: 8%;
+        bottom: 10%;
+        width: 35%;
+      }
+
+      .overlay-box {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        padding: 14px;
+        background: rgba(5, 7, 5, 0.78);
+        border: 1px solid var(--line);
+      }
+
+      .overlay-box strong,
+      .quote strong,
+      .tile strong {
+        color: var(--text);
+      }
+
+      .tile-grid,
+      .timeline,
+      .product-line,
+      .comparison {
+        display: grid;
+        gap: 14px;
+      }
+
+      .tile-grid.two,
+      .product-line,
+      .comparison {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .tile-grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .tile,
+      .quote,
+      .timeline article,
+      .product-line article,
+      .comparison article {
+        padding: 16px;
+      }
+
+      .tile strong {
+        display: block;
+        margin-top: 10px;
+        font-size: clamp(26px, 3vw, 52px);
+        line-height: 1;
+      }
+
+      .quote {
+        margin-top: 20px;
+        border-color: rgba(255, 122, 36, 0.5);
+        background: rgba(255, 122, 36, 0.1);
+      }
+
+      .quote strong {
+        color: var(--warning);
+      }
+
+      .timeline article span,
+      .product-line article span,
+      .comparison article span {
+        color: var(--muted-2);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .timeline h3,
+      .product-line h3,
+      .comparison h3 {
+        margin-top: 12px;
+      }
+
+      .slide-foot,
+      .tile-foot {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .slide-foot span,
+      .tile-foot span {
+        padding: 7px 9px;
+        color: var(--muted);
+        border: 1px solid var(--line);
+        font-size: 11px;
+        text-transform: uppercase;
+      }
+
+      .disclosure-block {
+        margin-top: 28px;
+        padding-top: 22px;
+        border-top: 1px solid var(--line);
+      }
+
+      @media (max-width: 1080px) {
+        .site-header {
+          flex-wrap: wrap;
+          padding: 14px 18px;
+        }
+
+        .deck-actions,
+        .nav-links {
+          width: 100%;
+        }
+
+        .deck-slide,
+        .tile-grid.two,
+        .tile-grid.three,
+        .product-line,
+        .comparison {
+          grid-template-columns: 1fr;
+        }
+
+        .deck-slide {
+          aspect-ratio: auto;
+          min-height: auto;
+        }
+      }
+
+      @media print {
+        body {
+          background: #fff;
+          color: #111;
+        }
+
+        .site-header {
+          display: none;
+        }
+
+        .deck-shell {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+        }
+
+        .deck-intro {
+          padding: 0 0 18px;
+        }
+
+        .deck-slide {
+          aspect-ratio: 16 / 9;
+          page-break-after: always;
+          break-after: page;
+          box-shadow: none;
+          background: #fff;
+          border-color: #bbb;
+        }
+
+        .deck-slide::before {
+          display: none;
+        }
+
+        .media-panel,
+        .tile,
+        .quote,
+        .timeline article,
+        .product-line article,
+        .comparison article {
+          background: #fff !important;
+          border-color: #bbb !important;
+          box-shadow: none !important;
+        }
+
+        h1,
+        h2,
+        h3,
+        .overlay-box strong,
+        .quote strong,
+        .tile strong {
+          color: #111 !important;
+        }
+
+        p,
+        li,
+        .deck-index,
+        .slide-index,
+        .tile span,
+        .timeline article span,
+        .product-line article span,
+        .comparison article span,
+        .disclosure {
+          color: #444 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brandline">
+        <img src="presentation/assets/roadvault-logo.svg" alt="RoadVault" />
+        <span>12-panel deck</span>
+      </div>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="index.html">Product</a>
+        <a href="Funding Brief.html">Funding</a>
+        <a href="Deck.html" aria-current="page">Deck</a>
+        <a href="Founder List.html">Founder List</a>
+      </nav>
+      <div class="deck-actions">
+        <button class="top-action primary" type="button" onclick="window.print()">
+          Download Investor Deck PDF
+        </button>
+        <a class="top-action" href="Funding Brief.html#sponsor-path">Request Sponsor Brief</a>
+      </div>
+    </header>
+
+    <main class="deck-shell">
+      <section class="deck-intro">
+        <p class="deck-index">ROADVAULT / DECK / 12 PANELS / PRINT READY</p>
+        <h1>Pre-POC fundraising deck, without the slideshow theater.</h1>
+      </section>
+
+      <section class="deck-grid">
+        <article class="deck-slide" id="slide-01">
+          <div class="slide-content">
+            <p class="slide-index">01 / TITLE</p>
+            <h2>RoadVault</h2>
+            <p class="slide-lede">Protect the tiny gear that carries your biggest work.</p>
+            <div class="quote">
+              <strong>Positioning:</strong>
+              <p>Trackable gear protection for creators on the move.</p>
+            </div>
+          </div>
+          <div class="slide-media media-panel">
+            <img class="bg" src="presentation/assets/roadvault-empty-workbench-background.png" alt="" />
+            <img class="item pouch" src="presentation/assets/product-prototypes-transparent/tourvault-tech-pouch-transparent.png" alt="TourVault Tech Pouch" />
+            <img class="item vault" src="presentation/assets/product-prototypes-transparent/setvault-usb-sd-vault-transparent.png" alt="SetVault USB / SD Vault" />
+            <img class="item card" src="presentation/assets/product-prototypes-transparent/nfc-lost-card-transparent.png" alt="NFC / QR Recovery System" />
+            <img class="item ssd" src="presentation/assets/product-prototypes-transparent/sessionvault-smart-ssd-transparent.png" alt="SessionVault Smart SSD" />
+            <div class="overlay-box">
+              <strong>RoadVault Founder Kit + SessionVault roadmap</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-02">
+          <div class="slide-content">
+            <p class="slide-index">02 / PROBLEM</p>
+            <h2>Creators lose irreplaceable small gear.</h2>
+            <p class="slide-lede">
+              Not just bags. The tiny things inside them that actually carry a
+              set, a shoot, a transfer, or a client deliverable.
+            </p>
+            <div class="quote">
+              <strong>Observed:</strong>
+              <p>Hard cases protect impact. Trackers locate bags. Nobody owns the chain-of-custody layer for creators.</p>
+            </div>
+          </div>
+          <div class="slide-media tile-grid three">
+            <article class="tile">
+              <span>Field load</span>
+              <strong>8-14</strong>
+              <p>Small, high-value objects inside a real creator bag.</p>
+            </article>
+            <article class="tile">
+              <span>Failure mode</span>
+              <strong>handoff</strong>
+              <p>Airports, hotel rooms, green rooms, vans, sessions.</p>
+            </article>
+            <article class="tile">
+              <span>Consequence</span>
+              <strong>delay</strong>
+              <p>Lost work, missed sets, broken delivery chains.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-03">
+          <div class="slide-content">
+            <p class="slide-index">03 / CUSTOMER</p>
+            <h2>Working creators who travel with their livelihoods.</h2>
+            <p class="slide-lede">
+              This is for the people whose cards, drives, and adapters are the
+              deliverable, not an accessory.
+            </p>
+          </div>
+          <div class="slide-media comparison">
+            <article>
+              <span>Primary</span>
+              <h3>Solo content operators</h3>
+              <p>YouTubers, doc shooters, editors, and day-rate freelancers.</p>
+            </article>
+            <article>
+              <span>Primary</span>
+              <h3>Touring crews / live performers</h3>
+              <p>DJs, musicians, podcasters, and mobile production teams.</p>
+            </article>
+            <article>
+              <span>Secondary</span>
+              <h3>Small production houses</h3>
+              <p>Lean teams with repeated travel and repeated handoff risk.</p>
+            </article>
+            <article>
+              <span>Secondary</span>
+              <h3>Creative teams</h3>
+              <p>Agencies, assistants, and operators who need cleaner recovery logic.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-04">
+          <div class="slide-content">
+            <p class="slide-index">04 / SOLUTION</p>
+            <h2>Trackable creator gear recovery ecosystem.</h2>
+            <p class="slide-lede">
+              RoadVault combines protective storage, recovery logic, and tracker
+              compatibility into one coherent creator system.
+            </p>
+            <div class="slide-foot">
+              <span>Identify</span>
+              <span>Track</span>
+              <span>Return</span>
+            </div>
+          </div>
+          <div class="slide-media media-panel">
+            <img class="bg" src="presentation/assets/roadvault-product-family-prototypes-v2.png" alt="RoadVault prototypes" />
+            <div class="overlay-box">
+              <strong>Tracker-compatible for V1. Integrated smart hardware on the roadmap.</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-05">
+          <div class="slide-content">
+            <p class="slide-index">05 / PRODUCT LINE</p>
+            <h2>TourVault, SetVault, Recovery, SessionVault.</h2>
+            <p class="slide-lede">
+              The first three prove the category. The fourth defines where the
+              roadmap can go once the fundamentals are real.
+            </p>
+          </div>
+          <div class="slide-media product-line">
+            <article>
+              <span>RV-001</span>
+              <h3>TourVault Tech Pouch</h3>
+              <p>Tracker-compatible organizer for drives, cables, adapters, passport, and IEMs.</p>
+            </article>
+            <article>
+              <span>RV-002</span>
+              <h3>SetVault USB / SD Vault</h3>
+              <p>Hard-shell media case for USBs, SDs, microSDs, and emergency backup sets.</p>
+            </article>
+            <article>
+              <span>RV-003</span>
+              <h3>NFC / QR Recovery System</h3>
+              <p>Tap-to-return NFC card and waterproof QR labels with no file access needed.</p>
+            </article>
+            <article>
+              <span>RV-004</span>
+              <h3>SessionVault Smart SSD</h3>
+              <p>Planned future flagship with encryption, lost mode, rugged enclosure, and future app support.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-06">
+          <div class="slide-content">
+            <p class="slide-index">06 / WHY NOW</p>
+            <h2>Tracker ubiquity + creator economy + workflow fragmentation.</h2>
+            <p class="slide-lede">
+              Trackers became normal. Creator travel and output kept compounding.
+              Nobody built the connective layer for the small objects creators
+              actually lose.
+            </p>
+          </div>
+          <div class="slide-media timeline">
+            <article>
+              <span>Tracker ubiquity</span>
+              <h3>Consumer infrastructure already exists.</h3>
+              <p>V1 can piggyback on behavior that is already mainstream.</p>
+            </article>
+            <article>
+              <span>Creator economy</span>
+              <h3>The customer kept growing.</h3>
+              <p>More solo operators, more travel, more media, more handoff risk.</p>
+            </article>
+            <article>
+              <span>Workflow fragmentation</span>
+              <h3>The category still feels generic.</h3>
+              <p>No coherent creator-facing product system owns recovery end to end.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-07">
+          <div class="slide-content">
+            <p class="slide-index">07 / COMPETITIVE WEDGE</p>
+            <h2>Generic pouches organize. RoadVault recovers.</h2>
+            <p class="slide-lede">
+              Existing options each solve one column. RoadVault stitches
+              protection, recoverability, and creator context into one system.
+            </p>
+          </div>
+          <div class="slide-media comparison">
+            <article>
+              <span>Generic organizers</span>
+              <h3>Store</h3>
+              <p>Better packing, no recovery logic.</p>
+            </article>
+            <article>
+              <span>Hard cases</span>
+              <h3>Protect</h3>
+              <p>Better impact resistance, no owner-contact layer.</p>
+            </article>
+            <article>
+              <span>Trackers</span>
+              <h3>Locate</h3>
+              <p>Better bag-level visibility, no creator-specific enclosure.</p>
+            </article>
+            <article>
+              <span>RoadVault</span>
+              <h3>Recover</h3>
+              <p>Protection + tracker compatibility + return path + creator language.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-08">
+          <div class="slide-content">
+            <p class="slide-index">08 / BUSINESS MODEL</p>
+            <h2>Kits, add-ons, sponsor packs, smart SSD roadmap, team packs.</h2>
+            <p class="slide-lede">
+              Start with practical physical systems and recovery layers, then
+              expand toward higher-value packs, B2B versions, and the future
+              storage flagship.
+            </p>
+          </div>
+          <div class="slide-media timeline">
+            <article>
+              <span>Entry</span>
+              <h3>Founder Kit</h3>
+              <p>Pouch + vault + recovery layer as the first honest offer.</p>
+            </article>
+            <article>
+              <span>Expansion</span>
+              <h3>Add-ons and sponsor packs</h3>
+              <p>Labels, upgraded inserts, partner bundles, co-branded placements.</p>
+            </article>
+            <article>
+              <span>B2B</span>
+              <h3>Team packs</h3>
+              <p>Production crews, agencies, touring teams, and repeat-buying operations.</p>
+            </article>
+            <article>
+              <span>Roadmap</span>
+              <h3>SessionVault Smart SSD</h3>
+              <p>Future flagship once creator demand and path clarity are proven.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-09">
+          <div class="slide-content">
+            <p class="slide-index">09 / FUNDING ASK</p>
+            <h2>$35K floor. $75K ideal.</h2>
+            <p class="slide-lede">
+              The floor proves the system at campaign grade. The ideal validates
+              the production path before a single public overclaim gets made.
+            </p>
+          </div>
+          <div class="slide-media tile-grid three">
+            <article class="tile">
+              <span>Floor</span>
+              <strong>$35K</strong>
+              <p>Campaign-grade prototypes, media, supplier quotes, launch prep.</p>
+            </article>
+            <article class="tile">
+              <span>Ideal</span>
+              <strong>$75K</strong>
+              <p>Validated run path, QA planning, packaging, fulfillment proof.</p>
+            </article>
+            <article class="tile">
+              <span>Vehicle</span>
+              <strong>SAFE</strong>
+              <p>Investor SAFE / sponsor pledge / founder reservation.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-10">
+          <div class="slide-content">
+            <p class="slide-index">10 / USE OF FUNDS</p>
+            <h2>What the money builds.</h2>
+            <p class="slide-lede">
+              Every dollar buys clarity: product proof, recovery workflow proof,
+              production-path proof, and launch-path proof.
+            </p>
+          </div>
+          <div class="slide-media comparison">
+            <article>
+              <span>$35K floor</span>
+              <h3>Campaign-grade build</h3>
+              <p>TourVault sample, SetVault sample, recovery MVP, photography, supplier quotes, campaign launch assets, packaging mockups.</p>
+            </article>
+            <article>
+              <span>$75K ideal</span>
+              <h3>Validated production path</h3>
+              <p>Small DDP / beta run, manufacturer confirmation, packaging samples, QA plan, fulfillment plan, pre-campaign content.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-11">
+          <div class="slide-content">
+            <p class="slide-index">11 / MILESTONES</p>
+            <h2>Funding close -> prototypes -> media -> supplier quotes -> consumer campaign.</h2>
+            <p class="slide-lede">
+              Prototype first, reality second, campaign last.
+            </p>
+          </div>
+          <div class="slide-media timeline">
+            <article>
+              <span>T+0</span>
+              <h3>Funding close</h3>
+              <p>Work begins against documented build goals.</p>
+            </article>
+            <article>
+              <span>T+30</span>
+              <h3>Prototypes</h3>
+              <p>Campaign-grade Founder Kit artifacts built and reviewed.</p>
+            </article>
+            <article>
+              <span>T+60</span>
+              <h3>Media + quotes</h3>
+              <p>Product photography, supplier quotes, recovery MVP checks.</p>
+            </article>
+            <article>
+              <span>T+90+</span>
+              <h3>Consumer campaign prep</h3>
+              <p>Only after proof and path clarity does launch motion begin.</p>
+            </article>
+          </div>
+        </article>
+
+        <article class="deck-slide" id="slide-12">
+          <div class="slide-content">
+            <p class="slide-index">12 / CTA</p>
+            <h2>Invest, sponsor, or join the founder list.</h2>
+            <p class="slide-lede">
+              RoadVault is currently pre-production and pre-POC. This deck is
+              for exploratory investor, sponsor, and founder-interest
+              conversations only.
+            </p>
+            <div class="deck-actions" style="margin-top: 26px;">
+              <a class="cta" href="Founder List.html?role=Investor&interest=Investment">Book Investor Call</a>
+              <a class="top-action" href="Founder List.html?role=Sponsor&interest=Sponsor">Sponsor the POC</a>
+              <a class="top-action" href="Founder List.html?role=Creator&interest=Founder Kit">Join Founder List</a>
+            </div>
+          </div>
+          <div class="slide-media">
+            <div class="quote" style="margin-top: 0;">
+              <strong>Disclosure:</strong>
+              <p>
+                RoadVault is currently pre-production and pre-POC. This page is
+                for exploratory investor, sponsor, and founder-interest
+                conversations only. Product specifications, timelines, and
+                availability are subject to change. Any investment opportunity
+                will be handled through proper legal documentation and
+                compliance review. RoadVault V1 is tracker-compatible and is not
+                affiliated with or certified by Apple Find My, Android Find Hub,
+                or any tracker manufacturer unless explicitly stated.
+              </p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="disclosure-block">
+        <p class="disclosure">
+          PRINT NOTE / each panel is laid out as a clean 16:9 frame for browser
+          PDF export.
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

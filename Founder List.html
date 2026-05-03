@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RoadVault | Founder List</title>
+    <meta
+      name="description"
+      content="Submit founder-interest for RoadVault as a creator, investor, sponsor, press contact, or manufacturer."
+    />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="page founder-page">
+    <header class="site-header">
+      <a class="brand-mark" href="index.html" aria-label="RoadVault home">
+        <img
+          class="brand-logo"
+          src="presentation/assets/roadvault-logo.svg"
+          alt="RoadVault"
+        />
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="index.html">Product</a>
+        <a href="Funding Brief.html">Funding</a>
+        <a href="Deck.html">Deck</a>
+        <a href="Founder List.html" aria-current="page">Founder List</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="page-hero section-shell">
+        <div class="hero-copy">
+          <p class="section-index">ROADVAULT / FOUNDER LIST</p>
+          <h1>Signal intent with specifics.</h1>
+          <p class="hero-lede">
+            This page is for exploratory founder-interest only. Creators,
+            investors, sponsors, press, manufacturers, and early operators can
+            register interest here and get logged into the RoadVault dossier.
+          </p>
+          <div class="hero-flags">
+            <span>Pre-POC</span>
+            <span>Pre-production</span>
+            <span>Founder ID generated</span>
+          </div>
+        </div>
+
+        <aside class="tactical-panel">
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            <span>Open intake</span>
+            <span>Dossier mode</span>
+          </div>
+          <dl class="data-list">
+            <div>
+              <dt>Roles</dt>
+              <dd>Creator / Investor / Sponsor / Press / Manufacturer / Other</dd>
+            </div>
+            <div>
+              <dt>Interest</dt>
+              <dd>Founder Kit / SessionVault SSD / Sponsor / Investment / Beta Testing</dd>
+            </div>
+            <div>
+              <dt>Response</dt>
+              <dd>Founder ID generated</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="section-shell dossier-section waitlist-layout">
+        <div>
+          <p class="section-index">01 / FOUNDER DOSSIER</p>
+          <h2>One clean intake for the right conversations.</h2>
+          <p class="section-lede narrow">
+            Founder list does not mean checkout. It means structured interest,
+            useful context, and a better next conversation.
+          </p>
+
+          <div class="stack-cards">
+            <article class="info-card">
+              <span class="info-tag">Creator</span>
+              <strong>Signal founder-kit or SSD demand.</strong>
+              <p>Tell us what gear you care about and where the current workflow breaks.</p>
+            </article>
+            <article class="info-card">
+              <span class="info-tag">Investor / Sponsor</span>
+              <strong>Point us at the right path.</strong>
+              <p>Use the form to route toward funding, partnership, or diligence conversations.</p>
+            </article>
+          </div>
+        </div>
+
+        <div>
+          <form
+            class="waitlist-form"
+            id="founderForm"
+            name="roadvault-founder-list"
+            method="POST"
+            action="/thanks.html"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+          >
+            <input type="hidden" name="form-name" value="roadvault-founder-list" />
+            <input type="hidden" name="interest" value="Founder Kit" />
+            <input type="hidden" name="submittedAt" value="" />
+
+            <label class="honeypot" aria-hidden="true">
+              Do not fill this out
+              <input name="bot-field" tabindex="-1" autocomplete="off" />
+            </label>
+
+            <div class="field-grid">
+              <label>
+                Name
+                <input type="text" name="name" autocomplete="name" required />
+              </label>
+              <label>
+                Email
+                <input type="email" name="email" autocomplete="email" required />
+              </label>
+            </div>
+
+            <label>
+              Role
+              <select name="role" required>
+                <option value="">Select role</option>
+                <option>Creator</option>
+                <option>Investor</option>
+                <option>Sponsor</option>
+                <option>Press</option>
+                <option>Manufacturer</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <div class="track-toggle" role="radiogroup" aria-label="Interest">
+              <button
+                type="button"
+                class="track-choice active"
+                data-choice="Founder Kit"
+                data-founder-interest="true"
+                role="radio"
+                aria-checked="true"
+              >
+                Founder Kit
+              </button>
+              <button
+                type="button"
+                class="track-choice"
+                data-choice="SessionVault SSD"
+                data-founder-interest="true"
+                role="radio"
+                aria-checked="false"
+              >
+                SessionVault SSD
+              </button>
+              <button
+                type="button"
+                class="track-choice"
+                data-choice="Sponsor"
+                data-founder-interest="true"
+                role="radio"
+                aria-checked="false"
+              >
+                Sponsor
+              </button>
+              <button
+                type="button"
+                class="track-choice"
+                data-choice="Investment"
+                data-founder-interest="true"
+                role="radio"
+                aria-checked="false"
+              >
+                Investment
+              </button>
+              <button
+                type="button"
+                class="track-choice"
+                data-choice="Beta Testing"
+                data-founder-interest="true"
+                role="radio"
+                aria-checked="false"
+              >
+                Beta Testing
+              </button>
+            </div>
+
+            <label>
+              Short message
+              <textarea
+                name="message"
+                rows="5"
+                placeholder="Tell us what you want, what role you play, or what part of the product / funding path matters to you."
+                required
+              ></textarea>
+            </label>
+
+            <label class="checkbox-row">
+              <input type="checkbox" name="consent" required />
+              <span>
+                I understand RoadVault is pre-POC and pre-production, and this
+                form is for exploratory founder-interest only.
+              </span>
+            </label>
+
+            <button class="primary-action wide-action" type="submit">
+              Generate Founder ID
+            </button>
+            <p class="form-note" id="founderFormNote" role="status" aria-live="polite">
+              Founder ID will be generated after submission.
+            </p>
+          </form>
+
+          <article class="confirmation-panel" id="confirmationPanel" aria-live="polite">
+            <p class="section-index">CONFIRMATION STATE</p>
+            <div class="founder-id-line">
+              <span>Founder ID generated</span>
+              <strong class="founder-id-badge" id="founderIdValue">RV-XX-000000</strong>
+            </div>
+            <p id="confirmationSummary">Role / interest / dossier received</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-shell dossier-section disclosure-block">
+        <p class="legal-disclosure">
+          RoadVault is currently pre-production and pre-POC. This page is for
+          exploratory investor, sponsor, and founder-interest conversations
+          only. Product specifications, timelines, and availability are subject
+          to change. Any investment opportunity will be handled through proper
+          legal documentation and compliance review. RoadVault V1 is
+          tracker-compatible and is not affiliated with or certified by Apple
+          Find My, Android Find Hub, or any tracker manufacturer unless
+          explicitly stated.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="section-shell footer-layout">
+        <strong>RoadVault</strong>
+        <span>Founder intake / RV-FL-001</span>
+      </div>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

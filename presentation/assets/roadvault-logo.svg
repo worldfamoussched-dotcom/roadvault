@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" role="img" aria-labelledby="title desc">
+  <title id="title">RoadVault logo</title>
+  <desc id="desc">RoadVault wordmark with RV badge.</desc>
+  <defs>
+    <style>
+      .signal { fill: #c7ff4a; }
+      .ink { fill: #11120f; }
+      .stroke { fill: none; stroke: #11120f; stroke-linejoin: round; stroke-width: 6; }
+      .wordmark {
+        fill: #11120f;
+        font-family: "Azeret Mono", "Courier New", monospace;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 0.03em;
+      }
+    </style>
+  </defs>
+  <rect class="signal" x="4" y="8" width="64" height="64" rx="8" />
+  <rect class="stroke" x="14" y="18" width="44" height="44" rx="4" />
+  <path
+    class="ink"
+    d="M24 52V28h15.4c6.4 0 10.4 3.5 10.4 8.6 0 3.6-2 6.2-5.1 7.5L52 52h-9.4l-6.1-7h-4V52H24Zm8.5-13.6h6.1c2.2 0 3.4-.8 3.4-2.4s-1.2-2.5-3.4-2.5h-6.1v4.9Zm21.3 13.6V28h8.5v24h-8.5Z"
+  />
+  <text class="wordmark" x="88" y="50">ROADVAULT</text>
+</svg>
