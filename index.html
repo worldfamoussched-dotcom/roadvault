@@ -1,235 +1,740 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>RoadVault | Product Explorer</title>
-    <meta
-      name="description"
-      content="Protect the tiny gear that carries your biggest work. Explore the RoadVault product system, funding brief, deck, and founder list."
-    />
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body class="page explorer-page">
-    <header class="site-header">
-      <a class="brand-mark" href="index.html" aria-label="RoadVault home">
-        <img
-          class="brand-logo"
-          src="presentation/assets/roadvault-logo.svg"
-          alt="RoadVault"
-        />
-      </a>
-      <nav class="nav-links" aria-label="Primary navigation">
-        <a href="index.html" aria-current="page">Product</a>
-        <a href="Funding Brief.html">Funding</a>
-        <a href="Deck.html">Deck</a>
-        <a href="Founder List.html">Founder List</a>
-      </nav>
-    </header>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>RoadVault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0b0a;
+  --ink: #e8e9e4;
+  --ink-dim: #8b8d86;
+  --ink-faint: #4a4c47;
+  --hair: rgba(232, 233, 228, 0.10);
+  --hair-strong: rgba(232, 233, 228, 0.24);
+  --accent: #9dff3c;
+  --accent-glow: rgba(157, 255, 60, 0.45);
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  overflow: hidden;
+  cursor: default;
+}
 
-    <main>
-      <section class="page-hero section-shell">
-        <div class="hero-copy">
-          <p class="section-index">ROADVAULT / PRODUCT EXPLORER</p>
-          <h1>Protect the tiny gear that carries your biggest work.</h1>
-          <p class="hero-lede">
-            RoadVault is trackable gear protection for creators on the move.
-            Built for the cards, drives, adapters, labels, and pouches that are
-            easy to lose and expensive to replace.
-          </p>
-          <p class="hero-subline">
-            Tracker-compatible for V1. Integrated smart hardware on the roadmap.
-          </p>
-          <div class="cta-row">
-            <a class="primary-action" href="Funding Brief.html">Review Funding Brief</a>
-            <a class="secondary-action" href="Deck.html">Open Deck</a>
-            <a class="accent-action" href="Founder List.html">Join Founder List</a>
-          </div>
-        </div>
+/* ========= STAGE ========= */
+.stage {
+  position: fixed; inset: 0;
+  background: #000;
+  overflow: hidden;
+}
 
-        <aside class="tactical-panel">
-          <div class="status-pill">
-            <span class="status-dot"></span>
-            <span>Pre-POC</span>
-            <span>Pre-production</span>
-          </div>
-          <dl class="data-list">
-            <div>
-              <dt>First product</dt>
-              <dd>RoadVault Founder Kit</dd>
-            </div>
-            <div>
-              <dt>Future flagship</dt>
-              <dd>SessionVault Smart SSD</dd>
-            </div>
-            <div>
-              <dt>Raise</dt>
-              <dd>$35K minimum / $75K ideal</dd>
-            </div>
-            <div>
-              <dt>Core promise</dt>
-              <dd>Identify · Track · Return</dd>
-            </div>
-          </dl>
-          <p class="micro-note">Field kit / mission brief / creator recovery system</p>
-        </aside>
-      </section>
+/* Video layer */
+.video-layer {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.video-layer.is-in { opacity: 1; }
+.video-layer.is-out { opacity: 0; transition: opacity 1.2s ease; }
+.video-layer.is-playing { opacity: 1; }
+.video-layer video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+/* subtle vignette over video */
+.video-layer::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 18%, transparent 78%, rgba(0,0,0,0.55) 100%);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+/* film-grain texture */
+.video-layer::before {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    radial-gradient(rgba(255,255,255,0.008) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 2px;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  opacity: 0.6;
+}
 
-      <section class="section-shell dossier-section">
-        <div class="section-heading">
-          <p class="section-index">01 / PRODUCT ECOSYSTEM</p>
-          <h2>Four artifacts. One trackable system.</h2>
-          <p class="section-lede narrow">
-            Not a generic pouch line. A creator-specific recovery ecosystem
-            designed around chain-of-custody for the smallest, most critical
-            objects in a working bag.
-          </p>
-        </div>
+/* ========= HUD overlay ========= */
+.hud {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.8s ease 0.4s;
+}
+.hud.is-in { opacity: 1; }
+.hud.is-out { opacity: 0; transition: opacity 0.6s ease; }
 
-        <div class="product-stage" aria-label="RoadVault product composition" tabindex="0">
-          <div class="stage-depth">
-            <img
-              class="stage-photo"
-              src="presentation/assets/roadvault-empty-workbench-background.png"
-              alt=""
-            />
-            <div class="stage-grid"></div>
-            <div class="stage-scanline"></div>
-            <div class="stage-reticle"></div>
-            <div class="route-line route-one"></div>
-            <div class="route-line route-two"></div>
-            <img
-              class="stage-item item-pouch"
-              src="presentation/assets/product-prototypes-transparent/tourvault-tech-pouch-transparent.png"
-              alt="TourVault Tech Pouch"
-            />
-            <img
-              class="stage-item item-vault"
-              src="presentation/assets/product-prototypes-transparent/setvault-usb-sd-vault-transparent.png"
-              alt="SetVault USB / SD Vault"
-            />
-            <img
-              class="stage-item item-card"
-              src="presentation/assets/product-prototypes-transparent/nfc-lost-card-transparent.png"
-              alt="NFC / QR Recovery System"
-            />
-            <img
-              class="stage-item item-ssd"
-              src="presentation/assets/product-prototypes-transparent/sessionvault-smart-ssd-transparent.png"
-              alt="SessionVault Smart SSD"
-            />
-          </div>
-        </div>
+.hud .corner {
+  position: absolute; width: 22px; height: 22px;
+  border: 1px solid var(--accent);
+  opacity: 0.7;
+}
+.hud .corner.tl { top: 22px; left: 22px; border-right: 0; border-bottom: 0; }
+.hud .corner.tr { top: 22px; right: 22px; border-left: 0; border-bottom: 0; }
+.hud .corner.bl { bottom: 22px; left: 22px; border-right: 0; border-top: 0; }
+.hud .corner.br { bottom: 22px; right: 22px; border-left: 0; border-top: 0; }
 
-        <div class="product-grid quad-grid">
-          <article class="product-card">
-            <span class="product-meta">RV-001 · TRACKER-COMPATIBLE</span>
-            <h3>TourVault Tech Pouch</h3>
-            <p>
-              Organizer for drives, cables, adapters, passport, IEMs, and other
-              small pieces that go missing in transit.
-            </p>
-            <div class="product-foot">
-              <span>Pouch</span>
-              <span>Travel core</span>
-            </div>
-          </article>
-          <article class="product-card">
-            <span class="product-meta">RV-002 · HARD-SHELL</span>
-            <h3>SetVault USB / SD Vault</h3>
-            <p>
-              Hard-shell media case for USBs, SDs, microSDs, emergency sets,
-              visual drives, and backup media.
-            </p>
-            <div class="product-foot">
-              <span>Media backup</span>
-              <span>Vault case</span>
-            </div>
-          </article>
-          <article class="product-card">
-            <span class="product-meta">RV-003 · RECOVERY LAYER</span>
-            <h3>NFC / QR Recovery System</h3>
-            <p>
-              Tap-to-return card and waterproof QR labels that let a finder
-              contact the owner without touching the files.
-            </p>
-            <div class="product-foot">
-              <span>NFC</span>
-              <span>QR</span>
-              <span>Recovery</span>
-            </div>
-          </article>
-          <article class="product-card roadmap">
-            <span class="product-meta">RV-004 · FUTURE FLAGSHIP</span>
-            <h3>SessionVault Smart SSD</h3>
-            <p>
-              Planned rugged encrypted SSD with lost mode, project labeling, and
-              future app support. Roadmap product, not current V1.
-            </p>
-            <div class="product-foot">
-              <span>Planned</span>
-              <span>Roadmap</span>
-            </div>
-          </article>
-        </div>
-      </section>
+.hud-bar {
+  position: absolute; left: 56px; right: 56px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.hud-bar.top { top: 30px; }
+.hud-bar.bot { bottom: 30px; }
+.hud-bar .live {
+  color: var(--accent);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.hud-bar .live::before {
+  content: ""; width: 6px; height: 6px; background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+  animation: dot-pulse 1.4s infinite;
+}
+@keyframes dot-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-      <section class="section-shell dossier-section split-layout">
-        <div>
-          <p class="section-index">02 / WHY THIS EXISTS</p>
-          <h2>Creators already travel with their livelihoods.</h2>
-          <p class="section-lede">
-            Hard cases protect impact. Trackers locate bags. RoadVault sits in
-            the missing layer between them: the small, high-value objects inside
-            the bag that actually carry the work.
-          </p>
-        </div>
-        <div class="stack-cards">
-          <article class="info-card">
-            <span class="info-tag">Field. 01</span>
-            <strong>8 to 14 small, critical items.</strong>
-            <p>That is the average chaos load in a real creator bag on a travel day.</p>
-          </article>
-          <article class="info-card">
-            <span class="info-tag">Field. 02</span>
-            <strong>Recovery beats re-organization.</strong>
-            <p>The customer pain is not neatness. It is loss, handoff failure, and delay.</p>
-          </article>
-          <article class="info-card">
-            <span class="info-tag">Field. 03</span>
-            <strong>V1 stays honest.</strong>
-            <p>Tracker-compatible, not tracker-manufactured. No overclaim, no vapor.</p>
-          </article>
-        </div>
-      </section>
+/* ========= Lockup (logo + headline) ========= */
+.lockup {
+  position: absolute;
+  left: 56px; bottom: 78px;
+  z-index: 11;
+  display: flex; flex-direction: column;
+  gap: 22px;
+  max-width: 720px;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 1s ease 0.6s, transform 1s ease 0.6s;
+}
+.lockup.is-in { opacity: 1; transform: none; }
+.lockup.is-out { opacity: 0; transform: translateY(-8px); transition: opacity 0.5s ease, transform 0.5s ease; }
 
-      <section class="section-shell dossier-section cta-band">
-        <div>
-          <p class="section-index">03 / NEXT STEP</p>
-          <h2>Not a preorder. Not a finished product. A working dossier and a build plan.</h2>
-        </div>
-        <div class="cta-stack">
-          <a class="primary-action wide-action" href="Funding Brief.html">Book Investor Path</a>
-          <a class="outline-action" href="Deck.html">View 12-slide Deck</a>
-          <a class="accent-action" href="Founder List.html">Signal Founder Interest</a>
-        </div>
-      </section>
-    </main>
+.logo {
+  display: flex; align-items: center; gap: 14px;
+}
+.logo-mark {
+  width: 44px; height: 44px;
+  border: 1px solid var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.logo-mark::before {
+  content: ""; position: absolute; inset: 4px;
+  border: 1px solid rgba(157,255,60,0.4);
+}
+.logo-mark span {
+  font-family: var(--mono); font-weight: 700;
+  font-size: 16px; color: var(--accent); letter-spacing: 0.04em;
+}
+.logo-word {
+  font-family: var(--mono); font-weight: 600;
+  font-size: 22px; letter-spacing: 0.18em; color: var(--ink);
+}
 
-    <footer class="site-footer">
-      <div class="section-shell footer-layout">
-        <strong>RoadVault</strong>
-        <span>Product -> Funding -> Deck -> Founder List</span>
+.lockup h1 {
+  margin: 0;
+  font-family: var(--mono); font-weight: 500;
+  font-size: clamp(34px, 4.4vw, 60px);
+  line-height: 1.0;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.lockup h1 .accent { color: var(--accent); }
+
+.lockup .lede {
+  font-size: 13px; line-height: 1.65;
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
+  max-width: 56ch;
+}
+
+/* ========= Hero ambience (right-side animation) ========= */
+.hero-ambience {
+  position: absolute;
+  top: 84px;
+  right: 56px;
+  bottom: 94px;
+  width: min(42vw, 700px);
+  min-width: 360px;
+  z-index: 11;
+  opacity: 0;
+  transform: translateX(12px);
+  transition: opacity 1s ease 0.8s, transform 1s ease 0.8s;
+  pointer-events: none;
+}
+.hero-ambience.is-in {
+  opacity: 1;
+  transform: translateX(0);
+}
+.hero-ambience.is-out {
+  opacity: 0;
+  transform: translateX(18px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.hero-ambience::before,
+.hero-ambience::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.hero-ambience::before {
+  background:
+    radial-gradient(circle at 54% 42%, rgba(157, 255, 60, 0.14), transparent 18%),
+    radial-gradient(circle at 58% 45%, rgba(255, 255, 255, 0.05), transparent 30%),
+    radial-gradient(circle at 70% 58%, rgba(157, 255, 60, 0.06), transparent 24%);
+  filter: blur(10px);
+  animation: ambience-breathe 7.5s ease-in-out infinite;
+}
+.hero-ambience::after {
+  background:
+    linear-gradient(180deg, rgba(157, 255, 60, 0.03), transparent 18%, transparent 82%, rgba(157, 255, 60, 0.02)),
+    repeating-linear-gradient(90deg, rgba(232, 233, 228, 0.03) 0 1px, transparent 1px 110px),
+    repeating-linear-gradient(180deg, rgba(232, 233, 228, 0.02) 0 1px, transparent 1px 110px);
+  mask-image: radial-gradient(circle at 56% 48%, rgba(0,0,0,0.94), rgba(0,0,0,0.2) 60%, transparent 82%);
+  opacity: 0.36;
+}
+.ambience-frame {
+  position: absolute;
+  inset: 14% 8% 10% 12%;
+  border: 1px solid rgba(232, 233, 228, 0.09);
+  background:
+    linear-gradient(180deg, rgba(157, 255, 60, 0.03), transparent 24%),
+    rgba(7, 9, 7, 0.14);
+  overflow: hidden;
+}
+.ambience-frame::before {
+  content: "";
+  position: absolute;
+  inset: 18px 18px 18px 18px;
+  border: 1px solid rgba(157, 255, 60, 0.08);
+  pointer-events: none;
+}
+.ambience-frame::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(157,255,60,0.7), transparent);
+  box-shadow: 0 0 18px rgba(157,255,60,0.24);
+  animation: scan-sweep 6.8s ease-in-out infinite;
+}
+.ambience-orbit {
+  position: absolute;
+  top: 50%;
+  left: 56%;
+  width: 132px;
+  height: 132px;
+  margin: -66px 0 0 -66px;
+  border-radius: 50%;
+  border: 1px solid rgba(157, 255, 60, 0.28);
+  box-shadow:
+    0 0 34px rgba(157, 255, 60, 0.08),
+    inset 0 0 24px rgba(157, 255, 60, 0.03);
+}
+.ambience-orbit::before,
+.ambience-orbit::after {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  border: 1px solid rgba(157, 255, 60, 0.1);
+}
+.ambience-orbit::after {
+  inset: -42px;
+  border-color: rgba(157, 255, 60, 0.07);
+}
+.ambience-orbit .cross-x,
+.ambience-orbit .cross-y {
+  position: absolute;
+  background: rgba(157, 255, 60, 0.24);
+}
+.ambience-orbit .cross-x {
+  left: 20px;
+  right: 20px;
+  top: 50%;
+  height: 1px;
+}
+.ambience-orbit .cross-y {
+  top: 20px;
+  bottom: 20px;
+  left: 50%;
+  width: 1px;
+}
+.ambience-ping {
+  position: absolute;
+  inset: -1px;
+  border-radius: 50%;
+  border: 1px solid rgba(157, 255, 60, 0.22);
+  animation: ping-pulse 4.2s ease-out infinite;
+}
+.ambience-copy {
+  position: absolute;
+  left: 14%;
+  right: 18%;
+  bottom: 14%;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-end;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.ambience-copy .left-stack,
+.ambience-copy .right-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ambience-copy strong {
+  color: var(--ink-dim);
+  font-weight: 500;
+}
+@keyframes ambience-breathe {
+  0%, 100% { transform: scale(0.98) translate3d(0, 0, 0); opacity: 0.78; }
+  50% { transform: scale(1.02) translate3d(-6px, 4px, 0); opacity: 1; }
+}
+@keyframes scan-sweep {
+  0%, 10% { transform: translateY(-120px); opacity: 0; }
+  20%, 78% { opacity: 1; }
+  100% { transform: translateY(240px); opacity: 0; }
+}
+@keyframes ping-pulse {
+  0% { transform: scale(0.92); opacity: 0; }
+  22% { opacity: 0.38; }
+  100% { transform: scale(1.18); opacity: 0; }
+}
+
+/* ========= ID block (top-right meta) ========= */
+.id-block {
+  position: absolute; top: 70px; right: 56px;
+  z-index: 11;
+  text-align: right;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink-faint);
+  display: flex; flex-direction: column; gap: 6px;
+  opacity: 0;
+  transition: opacity 0.8s ease 0.6s;
+}
+.id-block.is-in { opacity: 1; }
+.id-block.is-out { opacity: 0; transition: opacity 0.5s ease; }
+.id-block .row { display: flex; gap: 10px; justify-content: flex-end; }
+.id-block .row span:last-child { color: var(--ink-dim); min-width: 60px; text-align: right; }
+
+/* ========= Skip / Enter button ========= */
+.enter-cta {
+  position: absolute;
+  right: 56px; bottom: 78px;
+  z-index: 12;
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 12px;
+  opacity: 0;
+  transition: opacity 0.8s ease 1.2s;
+  pointer-events: auto;
+}
+.enter-cta.is-in { opacity: 1; }
+.enter-cta.is-out { opacity: 0; transition: opacity 0.5s ease; }
+
+.enter-btn {
+  font: inherit;
+  background: rgba(10, 11, 10, 0.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--hair-strong);
+  color: var(--ink);
+  padding: 14px 22px;
+  font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 14px;
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+}
+.enter-btn:hover, .enter-btn:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(157,255,60,0.06);
+  outline: none;
+}
+.enter-btn .arrow {
+  display: inline-block; transition: transform 0.25s;
+}
+.enter-btn:hover .arrow { transform: translateX(4px); }
+
+.enter-hint {
+  font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ========= Progress bar (video time) ========= */
+.progress {
+  position: absolute;
+  left: 56px; right: 56px;
+  bottom: 56px;
+  z-index: 11;
+  height: 1px;
+  background: var(--hair);
+  opacity: 0;
+  transition: opacity 0.8s ease 0.8s;
+}
+.progress.is-in { opacity: 1; }
+.progress.is-out { opacity: 0; transition: opacity 0.4s ease; }
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+  box-shadow: 0 0 8px var(--accent-glow);
+  transition: width 0.1s linear;
+}
+.progress-meta {
+  position: absolute; left: 0; right: 0;
+  bottom: 8px;
+  display: flex; justify-content: space-between;
+  font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* ========= Scanline cinematic effect ========= */
+.scan {
+  position: absolute; inset: 0;
+  z-index: 9;
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, transparent 1px, transparent 3px);
+  background-size: 100% 3px;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* ========= Outgoing fade-to-product overlay ========= */
+.handoff {
+  position: absolute; inset: 0;
+  background: var(--bg);
+  z-index: 30;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.4s ease;
+}
+.handoff.is-in { opacity: 1; }
+.handoff.is-pending { opacity: 1; pointer-events: auto; }
+
+.handoff-inner {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 26px;
+  font-family: var(--mono);
+  text-align: center;
+}
+.handoff-inner .loading-mark {
+  width: 56px; height: 56px;
+  border: 1px solid var(--accent);
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.handoff-inner .loading-mark::before {
+  content: ""; position: absolute; inset: -1px;
+  border: 1px solid var(--accent);
+  border-color: var(--accent) transparent transparent transparent;
+  animation: spin 1.2s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.handoff-inner .loading-mark span {
+  font-size: 16px; font-weight: 700; color: var(--accent); letter-spacing: 0.04em;
+}
+.handoff-inner .label {
+  font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* ========= Initial poster (before video plays) ========= */
+.poster {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, #1a1d18 0%, #050605 70%);
+  z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ========= Mobile ========= */
+@media (max-width: 760px) {
+  .hud-bar { left: 22px; right: 22px; font-size: 9px; }
+  .hud-bar.top { top: 22px; }
+  .hud-bar.bot { bottom: 22px; }
+  .hud .corner.tl { top: 14px; left: 14px; }
+  .hud .corner.tr { top: 14px; right: 14px; }
+  .hud .corner.bl { bottom: 14px; left: 14px; }
+  .hud .corner.br { bottom: 14px; right: 14px; }
+  .lockup { left: 22px; right: 22px; bottom: 100px; max-width: none; }
+  .hero-ambience { display: none; }
+  .id-block { display: none; }
+  .enter-cta { right: 22px; bottom: 22px; }
+  .progress { left: 22px; right: 22px; bottom: 76px; }
+  .lockup h1 { font-size: 32px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .video-layer, .video-layer.is-out, .lockup, .lockup.is-out, .id-block, .id-block.is-out, .progress, .handoff, .hud, .enter-cta { transition: opacity 0.2s ease; }
+}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <div class="poster" aria-hidden="true"></div>
+
+  <!-- Background reveal video -->
+  <div class="video-layer" id="videoLayer">
+    <video id="reveal" muted playsinline preload="auto" autoplay loop>
+      <source src="media/product-reveal.mp4" type="video/mp4" />
+      <source src="media/splash-intro.mp4" type="video/mp4" />
+    </video>
+  </div>
+
+  <!-- Subtle scanlines for film feel -->
+  <div class="scan" aria-hidden="true"></div>
+
+  <!-- HUD chrome -->
+  <div class="hud" id="hud" aria-hidden="true">
+    <span class="corner tl"></span><span class="corner tr"></span>
+    <span class="corner bl"></span><span class="corner br"></span>
+
+    <div class="hud-bar top">
+      <span class="live">RV / SYS — ONLINE</span>
+      <span>BUILD 04.26 · BERLIN · PDX</span>
+    </div>
+
+    <div class="hud-bar bot">
+      <span>RV-INTRO-001</span>
+      <span>SCROLL-FREE / TAP TO ENTER</span>
+    </div>
+  </div>
+
+  <!-- Top-right meta -->
+  <div class="id-block" id="idBlock">
+    <div class="row"><span>FILE</span><span>RV-INTRO-001</span></div>
+    <div class="row"><span>STAGE</span><span>PRE-POC</span></div>
+    <div class="row"><span>RAISE</span><span>$35K · $75K</span></div>
+    <div class="row"><span>YEAR</span><span>2026</span></div>
+  </div>
+
+  <!-- Lockup -->
+  <div class="lockup" id="lockup">
+    <div class="logo">
+      <div class="logo-mark"><span>R</span></div>
+      <div class="logo-word">ROADVAULT</div>
+    </div>
+    <h1>The trackable kit for <span class="accent">working creators</span>.</h1>
+    <p class="lede">A pre-POC investor &amp; sponsor dossier for a tracker-compatible carry, vault, NFC card, and recovery web for cards, drives, sessions, and gear that doesn't come back on its own.</p>
+  </div>
+
+  <div class="hero-ambience" id="heroRig" aria-hidden="true">
+    <div class="ambience-frame">
+      <div class="ambience-orbit">
+        <span class="cross-x"></span>
+        <span class="cross-y"></span>
+        <span class="ambience-ping"></span>
       </div>
-    </footer>
+      <div class="ambience-copy">
+        <div class="left-stack">
+          <span>System contour</span>
+          <strong>4-part field kit</strong>
+        </div>
+        <div class="right-stack">
+          <span>V1 status</span>
+          <strong>tracker-compatible</strong>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <script src="script.js"></script>
-  </body>
+  <!-- Enter CTA -->
+  <div class="enter-cta" id="enterCta">
+    <button class="enter-btn" id="enterBtn">
+      <span>Enter the dossier</span>
+      <span class="arrow">→</span>
+    </button>
+    <span class="enter-hint" id="enterHint">Enter the dossier · continue to product explorer</span>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress" id="progress">
+    <div class="progress-fill" id="progressFill"></div>
+    <div class="progress-meta">
+      <span id="pmStart">T+000</span>
+      <span id="pmEnd">RV-INTRO</span>
+    </div>
+  </div>
+
+  <!-- Handoff overlay -->
+  <div class="handoff" id="handoff" aria-hidden="true">
+    <div class="handoff-inner">
+      <div class="loading-mark"><span>R</span></div>
+      <div class="label">Loading product explorer</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const nextTarget = params.get('next') || 'Roadvault Explorer.html';
+  const enteredTarget = nextTarget.includes('?')
+    ? `${nextTarget}&entered=1`
+    : `${nextTarget}?entered=1`;
+  const NEXT_URL = enteredTarget;
+
+  const videoLayer = document.getElementById('videoLayer');
+  const video = document.getElementById('reveal');
+  const hud = document.getElementById('hud');
+  const lockup = document.getElementById('lockup');
+  const heroRig = document.getElementById('heroRig');
+  const idBlock = document.getElementById('idBlock');
+  const progress = document.getElementById('progress');
+  const progressFill = document.getElementById('progressFill');
+  const pmStart = document.getElementById('pmStart');
+  const handoff = document.getElementById('handoff');
+  const enterCta = document.getElementById('enterCta');
+  const enterBtn = document.getElementById('enterBtn');
+  const enterHint = document.getElementById('enterHint');
+  const handoffLabel = handoff.querySelector('.label');
+
+  let handedOff = false;
+  let introStarted = false;
+  let videoVisible = false;
+
+  function showEntryState() {
+    requestAnimationFrame(() => {
+      videoVisible = true;
+      videoLayer.classList.add('is-in', 'is-playing');
+      hud.classList.add('is-in');
+      lockup.classList.add('is-in');
+      heroRig.classList.add('is-in');
+      idBlock.classList.add('is-in');
+      enterCta.classList.add('is-in');
+      video.play().catch(() => {});
+    });
+  }
+
+  // 2) Track progress
+  video.addEventListener('timeupdate', () => {
+    if (!video.duration || !videoVisible) return;
+    const pct = (video.currentTime / video.duration) * 100;
+    progressFill.style.width = pct + '%';
+    const day = Math.round(video.currentTime * 10);
+    pmStart.textContent = 'T+' + String(day).padStart(3, '0');
+  });
+
+  // 3) When video nears end, start the handoff fade
+  video.addEventListener('timeupdate', () => {
+    if (handedOff || !video.duration || !introStarted) return;
+    if (video.currentTime >= video.duration - 0.8) {
+      startHandoff();
+    }
+  });
+  video.addEventListener('ended', () => {
+    if (introStarted && !handedOff) startHandoff();
+  });
+
+  // 4) Button starts the sequence
+  enterBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (introStarted || handedOff) return;
+    beginIntroSequence();
+  });
+
+  // 5) Keyboard controls
+  window.addEventListener('keydown', (e) => {
+    if (handedOff) return;
+    if (!introStarted && (e.key === 'Enter' || e.key === ' ')) {
+      beginIntroSequence();
+      return;
+    }
+    if (introStarted && videoVisible && (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape')) {
+      startHandoff();
+    }
+  });
+
+  function beginIntroSequence() {
+    introStarted = true;
+    handoffLabel.textContent = 'Booting intro sequence';
+    handoff.classList.add('is-pending');
+    enterCta.classList.add('is-out');
+    lockup.classList.add('is-out');
+    heroRig.classList.add('is-out');
+    idBlock.classList.add('is-out');
+    progressFill.style.width = '0%';
+    pmStart.textContent = 'T+000';
+    progress.classList.add('is-in');
+    handoff.classList.remove('is-pending');
+    handoffLabel.textContent = 'Loading product explorer';
+    video.loop = false;
+    if (video.duration && video.currentTime >= video.duration - 1.2) {
+      video.currentTime = 0;
+    }
+    const playAttempt = video.play();
+    if (playAttempt) {
+      playAttempt.catch(() => {
+        window.setTimeout(startHandoff, 1600);
+      });
+    }
+    window.setTimeout(() => {
+      if (!handedOff) startHandoff();
+    }, 7000);
+  }
+
+  function startHandoff() {
+    if (handedOff) return;
+    handedOff = true;
+
+    // Fade out video + HUD + lockup
+    videoLayer.classList.add('is-out');
+    hud.classList.add('is-out');
+    lockup.classList.add('is-out');
+    heroRig.classList.add('is-out');
+    idBlock.classList.add('is-out');
+    progress.classList.add('is-out');
+    enterCta.classList.add('is-out');
+
+    // Slight delay, then fade in handoff overlay
+    setTimeout(() => {
+      handoff.classList.remove('is-pending');
+      handoff.classList.add('is-in');
+    }, 250);
+
+    // Navigate after the overlay is fully in
+    setTimeout(() => {
+      window.location.href = NEXT_URL;
+    }, 1500);
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && introStarted && videoVisible && !handedOff) {
+      video.play().catch(() => {});
+    }
+  });
+
+  setTimeout(showEntryState, 240);
+})();
+</script>
+</body>
 </html>

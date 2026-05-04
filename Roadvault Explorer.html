@@ -1,0 +1,1545 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ROADVAULT — Creator Gear System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script defer src="page-loader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+/* ============ TOKENS ============ */
+:root {
+  --bg: #0a0b0a;
+  --bg-2: #111312;
+  --ink: #e8e9e4;
+  --ink-dim: #8b8d86;
+  --ink-faint: #4a4c47;
+  --hair: rgba(232, 233, 228, 0.12);
+  --hair-strong: rgba(232, 233, 228, 0.28);
+  --accent: #9dff3c;       /* electric green */
+  --accent-glow: rgba(157, 255, 60, 0.55);
+  --accent-soft: rgba(157, 255, 60, 0.08);
+  --panel: rgba(14, 16, 14, 0.72);
+  --panel-edge: rgba(232, 233, 228, 0.16);
+  --warn: #ff6b3d;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+
+/* ============ HUD CHROME ============ */
+.hud {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  mix-blend-mode: normal;
+}
+.hud .corner {
+  position: absolute;
+  width: 18px; height: 18px;
+  border: 1px solid var(--hair-strong);
+}
+.hud .corner.tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+.hud .corner.tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; }
+.hud .corner.bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; }
+.hud .corner.br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+
+.hud-bar {
+  position: absolute;
+  left: 32px; right: 32px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.hud-bar.top { top: 22px; }
+.nav-top { display:flex; gap: 22px; pointer-events: auto; }
+.nav-top .nav-link {
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink-dim); text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-top .nav-link:hover { color: var(--ink); }
+.nav-top .nav-link.is-active { color: var(--accent); border-bottom-color: var(--accent); }
+.hud-bar.bot { bottom: 22px; }
+.hud-bar .dot {
+  display: inline-block; width: 6px; height: 6px;
+  background: var(--accent); margin-right: 8px; vertical-align: middle;
+  box-shadow: 0 0 8px var(--accent-glow);
+  animation: dot-pulse 2s infinite;
+}
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.35; }
+}
+.hud-bar .seg { display: flex; gap: 22px; }
+
+/* ============ HEADER LOCKUP ============ */
+.lockup {
+  position: fixed; top: 48px; left: 48px;
+  z-index: 30; pointer-events: none;
+  max-width: 280px;
+}
+.lockup .badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink-dim);
+  border: 1px solid var(--hair-strong);
+  padding: 4px 9px;
+  margin-bottom: 14px;
+  background: rgba(8,9,8,0.55);
+  backdrop-filter: blur(6px);
+}
+.lockup .badge::before {
+  content: ""; width: 5px; height: 5px; background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+}
+.lockup .logo {
+  display: block;
+  width: 132px; height: auto;
+  margin-bottom: 16px;
+}
+.lockup .logo .signal { fill: var(--accent); }
+.lockup .logo .stroke { fill: #0a0b0a; }
+.lockup .logo .ink { fill: var(--accent); }
+.lockup .logo .wordmark {
+  fill: var(--ink);
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.lockup h1 {
+  margin: 0;
+  font-size: clamp(20px, 1.8vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.05;
+  color: var(--ink);
+  text-shadow: 0 2px 24px rgba(0,0,0,0.6);
+}
+.lockup h1 .slash { color: var(--accent); }
+.lockup .sub { display: none; }
+.lockup .meta { display: none; }
+
+/* ============ PRODUCT INDEX DROPDOWN (right) ============ */
+.rail {
+  position: fixed; left: 50%; bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 30;
+  width: min(520px, calc(100vw - 48px));
+  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-dim);
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: stretch;
+  gap: 2px;
+}
+.rail-toggle {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  cursor: pointer;
+  border: 1px solid var(--hair-strong);
+  border-left-color: var(--accent);
+  padding: 10px 12px;
+  background: rgba(8, 9, 8, 0.68);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.32);
+}
+.rail-toggle .label {
+  display: flex; align-items: center; gap: 9px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.rail-toggle .label::before {
+  content: "";
+  width: 5px; height: 5px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.rail-toggle .current {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: right;
+  color: var(--accent);
+}
+.rail-toggle .chev {
+  color: var(--accent);
+  transition: transform 0.22s ease;
+}
+.rail.is-open .rail-toggle .chev,
+.rail:focus-within .rail-toggle .chev {
+  transform: rotate(180deg);
+}
+.rail-menu {
+  display: grid;
+  gap: 2px;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  border: 1px solid transparent;
+  border-bottom: 0;
+  background: rgba(8, 9, 8, 0.60);
+  backdrop-filter: blur(12px);
+  transition: max-height 0.26s ease, opacity 0.2s ease, transform 0.22s ease, border-color 0.2s ease;
+}
+.rail.is-open .rail-menu,
+.rail:focus-within .rail-menu {
+  max-height: 268px;
+  opacity: 1;
+  transform: translateY(0);
+  border-color: var(--hair-strong);
+}
+.rail .item {
+  width: 100%;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  padding: 7px 10px;
+  transition: color 0.2s, background 0.2s;
+}
+.rail .item:hover,
+.rail .item:focus-visible,
+.rail .item.is-active {
+  color: var(--ink);
+  background: rgba(157, 255, 60, 0.06);
+}
+.rail .item .num { color: var(--ink-faint); width: 22px; }
+.rail .item .tick {
+  width: 18px; height: 1px; background: var(--hair-strong);
+  transition: background 0.2s, width 0.2s;
+}
+.rail .item:hover .tick,
+.rail .item:focus-visible .tick,
+.rail .item.is-active .tick {
+  background: var(--accent);
+  width: 30px;
+}
+.rail .item .lbl { white-space: nowrap; }
+
+/* ============ HERO STAGE ============ */
+.stage {
+  position: relative;
+  width: 100vw; height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+  perspective: 1400px;
+}
+.stage-inner {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.hero-photo {
+  position: absolute; inset: 0;
+  background-image: url('assets/hero.png');
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+.hero-photo::after {
+  /* vignette */
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, transparent 25%, transparent 75%, rgba(0,0,0,0.45) 100%);
+  pointer-events: none;
+}
+
+/* coordinate frame matches the photo's 1672×941 — we use a percentage box */
+.spots {
+  position: absolute; inset: 0;
+  z-index: 10;
+}
+.spot {
+  position: absolute;
+  cursor: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  overflow: visible;
+  transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+  will-change: transform, opacity;
+}
+.spot.is-active {
+  opacity: 1 !important;
+  z-index: 4;
+}
+.spot .silhouette {
+  position: absolute; inset: 0;
+  --product-image: none;
+  --product-mask: none;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  background-image: var(--product-image);
+  opacity: 0.04;
+  transform: scale(0.98);
+  transition: opacity 0.2s, transform 0.25s, filter 0.25s;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter:
+    saturate(0.92)
+    brightness(0.98)
+    contrast(1.04);
+}
+.spot .silhouette::before,
+.spot .silhouette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: var(--product-mask);
+  mask-image: var(--product-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center center;
+  mask-position: center center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.25s, filter 0.25s;
+}
+.spot .silhouette::before {
+  background: linear-gradient(180deg, rgba(157,255,60,0.95), rgba(157,255,60,0.24));
+  transform: scale(1.012);
+  filter: blur(0.25px) drop-shadow(0 0 10px rgba(157,255,60,0.8));
+  mix-blend-mode: screen;
+}
+.spot .silhouette::after {
+  background: rgba(157,255,60,0.22);
+  transform: scale(1.05);
+  filter: blur(9px) drop-shadow(0 0 20px rgba(157,255,60,0.55));
+  mix-blend-mode: screen;
+}
+.spot:hover .silhouette,
+.spot:focus-visible .silhouette,
+.spot.is-active .silhouette {
+  opacity: 0.18;
+  transform: scale(1);
+  filter:
+    saturate(1.02)
+    brightness(1.03)
+    contrast(1.08);
+}
+.spot:hover .silhouette::before,
+.spot:focus-visible .silhouette::before,
+.spot.is-active .silhouette::before {
+  opacity: 0.96;
+}
+.spot:hover .silhouette::after,
+.spot:focus-visible .silhouette::after,
+.spot.is-active .silhouette::after {
+  opacity: 0.34;
+}
+
+/* corner brackets on each spot */
+.spot .br {
+  display: none;
+}
+
+.spot .tag {
+  position: absolute;
+  bottom: -38px; left: 0;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink);
+  background: rgba(8,9,8,0.92);
+  border: 1px solid var(--accent);
+  padding: 5px 9px;
+  white-space: nowrap;
+  opacity: 0; transform: translateY(-4px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+.spot .tag::before {
+  content: ""; width: 5px; height: 5px; background: var(--accent);
+  box-shadow: 0 0 5px var(--accent-glow);
+}
+.spot .tag .code { color: var(--ink-dim); margin-left: 6px; }
+.spot:hover .tag,
+.spot:focus-visible .tag,
+.spot.is-active .tag {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* desaturate siblings while one is hovered */
+.spots.is-hovering .spot:not(:hover):not(:focus-visible):not(.is-active) { opacity: 0.32; }
+.spots.is-hovering .spot:not(:hover):not(:focus-visible) ~ .spot { /* no-op */ }
+
+/* When a product is open, photo darkens & blurs */
+.stage.is-focused .hero-photo { filter: blur(14px) brightness(0.4) saturate(0.7); transform: scale(1.06); transition: filter 0.6s, transform 0.6s; }
+.stage.is-focused .spots { opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+
+/* ============ CUSTOM CURSOR ============ */
+.cursor {
+  position: fixed; top: 0; left: 0;
+  width: 28px; height: 28px;
+  pointer-events: none;
+  z-index: 200;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.15s, width 0.15s, height 0.15s;
+  mix-blend-mode: difference;
+}
+.cursor::before, .cursor::after {
+  content: ""; position: absolute; background: var(--accent);
+}
+.cursor::before { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+.cursor::after  { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); }
+.cursor .ring {
+  position: absolute; inset: 0;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+.cursor .label {
+  position: absolute;
+  top: 100%; left: 100%;
+  margin: 6px;
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+  opacity: 0;
+}
+body.cursor-hot .cursor { opacity: 1; }
+body.cursor-active .cursor { width: 56px; height: 56px; }
+body.cursor-active .cursor .label { opacity: 1; }
+
+/* ============ FOCUS STAGE ============ */
+.focus-stage {
+  position: fixed; inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  perspective: 1600px;
+  perspective-origin: 50% 45%;
+}
+.focus-stage.is-on { pointer-events: auto; }
+
+.focus-card {
+  position: relative;
+  width: clamp(280px, 38vw, 560px);
+  aspect-ratio: 1 / 1;
+  transform-style: preserve-3d;
+  opacity: 0;
+  /* shifted left to account for right-side panel */
+  transform: translateX(-12vw) translateZ(0) scale(0.7);
+  will-change: transform, opacity;
+}
+.focus-card .img-wrap {
+  position: absolute; inset: 0;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.7)) drop-shadow(0 0 40px var(--accent-soft));
+  transform-style: preserve-3d;
+  transform: translateZ(40px);
+  backface-visibility: visible;
+}
+/* contact shadow on the floor plane */
+.focus-card::after {
+  content: "";
+  position: absolute;
+  left: 8%; right: 8%; bottom: -4%;
+  height: 8%;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.65), transparent 70%);
+  filter: blur(6px);
+  transform: translateZ(-30px) rotateX(85deg);
+  transform-origin: center top;
+  pointer-events: none;
+}
+.focus-card .scan {
+  position: absolute; inset: -2%;
+  border: 1px solid var(--accent);
+  opacity: 0;
+  pointer-events: none;
+}
+.focus-card .crosshair {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.focus-card .crosshair::before,
+.focus-card .crosshair::after {
+  content: ""; position: absolute; background: var(--accent); opacity: 0.4;
+}
+.focus-card .crosshair::before { top: 50%; left: -10%; right: -10%; height: 1px; }
+.focus-card .crosshair::after  { left: 50%; top: -10%; bottom: -10%; width: 1px; }
+
+/* signature animation overlays — transparent layers above the cropped image */
+.sig {
+  position: absolute; inset: 0;
+  pointer-events: none;
+}
+
+/* SSD LED */
+.sig-led {
+  position: absolute;
+  width: 8px; height: 8px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow), 0 0 24px var(--accent-glow);
+  opacity: 0;
+}
+
+/* NFC waves */
+.sig-wave {
+  position: absolute;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+/* QR peel — small floating squares */
+.sig-peel {
+  position: absolute;
+  width: 14%; aspect-ratio: 1;
+  border: 1px solid var(--accent);
+  background: rgba(157,255,60,0.05);
+  opacity: 0;
+}
+
+/* SetVault drives */
+.sig-drive {
+  position: absolute;
+  width: 10%; height: 4%;
+  background: linear-gradient(#1a1c19, #0a0b0a);
+  border: 1px solid var(--hair-strong);
+  opacity: 0;
+}
+
+/* Labels */
+.sig-label {
+  position: absolute;
+  width: 22%; height: 5%;
+  background: rgba(20,22,19,0.95);
+  border: 1px solid var(--hair-strong);
+  opacity: 0;
+}
+
+/* Pouch tracker */
+.sig-tracker {
+  position: absolute;
+  width: 14%; aspect-ratio: 1;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+  opacity: 0;
+}
+
+/* zip pull animation rendered as a moving line */
+.sig-zip {
+  position: absolute;
+  width: 60%; height: 1px;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+  opacity: 0;
+}
+
+/* ============ DETAIL PANEL ============ */
+.panel {
+  position: fixed; top: 0; right: 0;
+  width: min(40vw, 560px); height: 100vh;
+  background: rgba(8, 10, 8, 0.78);
+  backdrop-filter: blur(28px) saturate(1.1);
+  -webkit-backdrop-filter: blur(28px) saturate(1.1);
+  border-left: 1px solid var(--hair-strong);
+  z-index: 90;
+  transform: translateX(100%);
+  display: flex; flex-direction: column;
+  color: var(--ink);
+  will-change: transform;
+}
+.panel.is-on { /* gsap animates */ }
+
+.panel-head {
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--hair);
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 20px;
+}
+.panel-head .id-row {
+  display: flex; gap: 14px;
+  font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+.panel-head .id-row .num { color: var(--accent); }
+.panel-head h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.005em;
+}
+.panel-head .tagline {
+  margin-top: 10px;
+  color: var(--ink-dim);
+  font-size: 12px;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+}
+.panel-close {
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  border: 1px solid var(--hair-strong);
+  flex: 0 0 auto;
+  position: relative;
+  transition: border-color 0.2s, color 0.2s;
+}
+.panel-close:hover { border-color: var(--accent); color: var(--accent); }
+.panel-close::before, .panel-close::after {
+  content: ""; position: absolute;
+  width: 14px; height: 1px;
+  background: currentColor;
+}
+.panel-close::before { transform: rotate(45deg); }
+.panel-close::after { transform: rotate(-45deg); }
+
+.panel-body {
+  padding: 24px 32px 32px;
+  flex: 1; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 28px;
+}
+.panel-body::-webkit-scrollbar { width: 4px; }
+.panel-body::-webkit-scrollbar-thumb { background: var(--hair-strong); }
+
+.section-label {
+  font-size: 9.5px; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::before {
+  content: ""; width: 18px; height: 1px; background: var(--hair-strong);
+}
+
+.features { list-style: none; padding: 0; margin: 0; }
+.features li {
+  display: grid; grid-template-columns: 28px 1fr;
+  gap: 10px;
+  padding: 14px 0;
+  border-top: 1px solid var(--hair);
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.features li:last-child { border-bottom: 1px solid var(--hair); }
+.features .k {
+  color: var(--accent);
+  font-size: 9.5px; letter-spacing: 0.18em;
+  padding-top: 3px;
+}
+
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.spec-table tr { border-top: 1px solid var(--hair); }
+.spec-table tr:last-child { border-bottom: 1px solid var(--hair); }
+.spec-table td {
+  padding: 10px 0;
+  vertical-align: top;
+}
+.spec-table td:first-child {
+  color: var(--ink-faint);
+  width: 38%;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 9.5px;
+  padding-top: 13px;
+}
+.spec-table td:last-child {
+  color: var(--ink);
+  text-align: right;
+}
+
+.cta {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%;
+  padding: 16px 18px;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #0a0b0a;
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.cta:hover { background: transparent; color: var(--accent); }
+.cta .arrow { font-family: var(--mono); }
+
+.cta-secondary {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid var(--hair-strong);
+  color: var(--ink-dim);
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.cta-secondary:hover { border-color: var(--ink); color: var(--ink); }
+
+.price-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--hair);
+}
+.price-row .price {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.price-row .stock {
+  font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 8px;
+}
+.price-row .stock::before {
+  content: ""; width: 6px; height: 6px; background: var(--accent);
+  box-shadow: 0 0 6px var(--accent-glow);
+  animation: dot-pulse 1.6s infinite;
+}
+
+.scrim {
+  position: fixed; inset: 0;
+  z-index: 70;
+  background: rgba(2,3,2,0.55);
+  opacity: 0;
+  pointer-events: none;
+}
+.scrim.is-on { pointer-events: auto; }
+
+/* ============ MOBILE LIST (under hero) ============ */
+.mobile-list {
+  display: none;
+  padding: 28px 20px 60px;
+  background: var(--bg);
+  border-top: 1px solid var(--hair);
+}
+.mobile-list h3 {
+  font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--ink-dim);
+  margin: 0 0 18px;
+}
+.m-item {
+  border-top: 1px solid var(--hair);
+  padding: 18px 0;
+}
+.m-item:last-child { border-bottom: 1px solid var(--hair); }
+.m-item-head {
+  display: grid; grid-template-columns: 28px 1fr 16px; gap: 12px; align-items: center;
+  cursor: pointer;
+}
+.m-item .num { color: var(--accent); font-size: 10px; letter-spacing: 0.16em; }
+.m-item .nm { font-size: 14px; }
+.m-item .chev { color: var(--ink-dim); transition: transform 0.3s; }
+.m-item.is-open .chev { transform: rotate(45deg); }
+.m-item .body {
+  display: none;
+  padding-top: 14px;
+  font-size: 12px;
+  color: var(--ink-dim);
+  line-height: 1.6;
+}
+.m-item.is-open .body { display: block; }
+
+@media (max-width: 900px) {
+  body.cursor-hot .cursor { opacity: 0 !important; }
+  .stage { height: 56vh; }
+  .stage .spots { display: none; }
+  .lockup { position: relative; top: auto; left: auto; padding: 24px 20px 0; }
+  .rail { display: none; }
+  .hud-bar { left: 14px; right: 14px; font-size: 9px; }
+  .mobile-list { display: block; }
+  .panel { width: 100vw; }
+  .focus-card { transform: translateX(0) scale(0.7); }
+  .hero-photo { background-size: auto 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========================================================================
+     PRODUCT_DATA — single source of truth, easy to edit
+     ======================================================================== -->
+<script>
+const PRODUCT_DATA = [
+  {
+    id: 'rv-pouch',
+    code: 'RV-001',
+    name: 'RV Roadvault Pouch',
+    tagline: 'Reinforced cordura zip pouch with concealed AirTag pocket. Built to vanish into your kit and reappear when it counts.',
+    price: '$84',
+    stock: 'In stock — ships 24h',
+    sig: 'pouch',
+    img: 'assets/products-tight/pouch.png',
+    spot: { x: 5.2,  y: 2.2,  w: 50.5, h: 48 },
+    features: [
+      ['01', '500D ballistic cordura with YKK AquaGuard zipper and reinforced corner stitching'],
+      ['02', 'Hidden interior tracker pocket sized for AirTag, Tile, or Galaxy SmartTag'],
+      ['03', 'Internal mesh organizer + elastic loops for cables, dongles, and small accessories'],
+    ],
+    specs: [
+      ['Dimensions', '180 × 110 × 45 mm'],
+      ['Weight',     '92 g'],
+      ['Material',   '500D Cordura / TPU'],
+      ['Zipper',     'YKK AquaGuard #5'],
+      ['Compat.',    'AirTag · Tile · SmartTag'],
+      ['Warranty',   'Lifetime stitching'],
+    ],
+  },
+  {
+    id: 'nfc-card',
+    code: 'RV-002',
+    name: 'NFC Tap-to-Return Card',
+    tagline: 'Credit-card thin. Tap any phone, route the finder straight to your encrypted recovery page.',
+    price: '$24',
+    stock: 'In stock',
+    sig: 'nfc',
+    img: 'assets/products-tight/nfc.png',
+    spot: { x: 61.0, y: 5.0,  w: 12.5, h: 36.5 },
+    features: [
+      ['01', 'NTAG216 chip — works with every NFC-enabled iPhone and Android, no app required'],
+      ['02', 'Routes to your private RV Recovery URL with one-time encrypted finder messaging'],
+      ['03', 'PVC composite, IP67 sealed — survives sweat, rain, gear bags, and gaff tape'],
+    ],
+    specs: [
+      ['Chip',       'NXP NTAG216 — 924 bytes'],
+      ['Read range', 'up to 4 cm'],
+      ['Dimensions', '85.6 × 53.98 × 0.84 mm'],
+      ['Material',   'PVC / inkjet PET'],
+      ['Rating',     'IP67'],
+      ['Pack',       'Single card + ID code'],
+    ],
+  },
+  {
+    id: 'qr-recovery',
+    code: 'RV-003',
+    name: 'Recovery QR Sticker Sheet',
+    tagline: 'Twenty-four waterproof recovery codes. Stick them on every camera body, drive, lens cap, and pelican.',
+    price: '$18',
+    stock: 'In stock',
+    sig: 'qr',
+    img: 'assets/products-tight/qr.png',
+    spot: { x: 76.8, y: 8.0,  w: 18.5, h: 38.5 },
+    features: [
+      ['01', '24 unique encrypted codes per sheet — each links to your RV Recovery dashboard'],
+      ['02', '3M industrial adhesive backing — peel, stick, forget. Survives -20°C to +90°C'],
+      ['03', 'UV resistant laminate stays scannable after years of light, abrasion, and travel'],
+    ],
+    specs: [
+      ['Codes / sheet', '24 unique'],
+      ['Sticker size',  '22 × 22 mm'],
+      ['Adhesive',      '3M 467MP'],
+      ['Temp range',    '−20°C to +90°C'],
+      ['Material',      'Polyester + UV laminate'],
+      ['Lifespan',      '5+ years outdoor'],
+    ],
+  },
+  {
+    id: 'setvault',
+    code: 'RV-004',
+    name: 'SetVault — USB / SD Vault',
+    tagline: 'Field case for the cards and drives that hold your shoot. Watertight, foam-fitted, color-coded.',
+    price: '$129',
+    stock: 'In stock — ships 24h',
+    sig: 'setvault',
+    img: 'assets/products-tight/setvault.png',
+    spot: { x: 2.5, y: 41.0,  w: 33.5, h: 50.5 },
+    features: [
+      ['01', 'EVA foam inserts hold 4× SD, 4× microSD, 3× USB-C drives — no rattle, no static'],
+      ['02', 'IP67 sealed polycarbonate shell with stainless hinge pins. Tested to 2 m drop'],
+      ['03', 'Internal NFC tag pre-paired to RV Recovery — entire case is trackable as one unit'],
+    ],
+    specs: [
+      ['Capacity',  '4 SD · 4 microSD · 3 USB-C'],
+      ['Dimensions','155 × 85 × 32 mm'],
+      ['Weight',    '180 g'],
+      ['Sealing',   'IP67, dust + 1 m water'],
+      ['Drop',      'MIL-STD-810 2 m'],
+      ['Closure',   'Stainless dual-latch'],
+    ],
+  },
+  {
+    id: 'labels',
+    code: 'RV-005',
+    name: 'Creator Label Sheet',
+    tagline: 'Pre-printed, write-on field labels. The unfussy way to know which drive holds the master.',
+    price: '$14',
+    stock: 'In stock',
+    sig: 'labels',
+    img: 'assets/products-tight/labels.png',
+    spot: { x: 38.0, y: 42.5, w: 27.0, h: 45.5 },
+    features: [
+      ['01', 'Categorized fields — drives, cables, cases, adapters — pre-printed in monospace'],
+      ['02', 'Write-on matte surface accepts ballpoint, sharpie, paint pen — no smearing'],
+      ['03', 'Tear-resistant synthetic paper. Survives a season in a gear bag without fraying'],
+    ],
+    specs: [
+      ['Sheet size','A5 — 210 × 148 mm'],
+      ['Labels',    '32 per sheet, mixed sizes'],
+      ['Material',  'Synthetic Yupo, 144 gsm'],
+      ['Surface',   'Matte write-on / tear-proof'],
+      ['Pack',      'Sheets × 4'],
+      ['Adhesive',  'Removable — non-residue'],
+    ],
+  },
+  {
+    id: 'sessionvault',
+    code: 'RV-006',
+    name: 'SessionVault Smart SSD',
+    tagline: 'Encrypted 2 TB SSD with NFC pairing and a single, honest LED that tells you it\u2019s alive.',
+    price: '$349',
+    stock: 'Pre-order — ships May 22',
+    sig: 'ssd',
+    img: 'assets/products-tight/ssd.png',
+    spot: { x: 69.8, y: 43.5, w: 22.5, h: 46.0 },
+    features: [
+      ['01', '2 TB NVMe — sustained 1,050 MB/s read, 1,000 MB/s write over USB-C 10 Gbps'],
+      ['02', 'AES-256 hardware encryption, paired to your phone over NFC — no software install'],
+      ['03', 'Single status LED indicates: idle (off), active (pulse), encrypted (steady green)'],
+    ],
+    specs: [
+      ['Capacity',  '2 TB NVMe SSD'],
+      ['Read',      '1,050 MB/s sustained'],
+      ['Write',     '1,000 MB/s sustained'],
+      ['Interface', 'USB-C 3.2 Gen 2 (10 Gbps)'],
+      ['Encryption','AES-256 hardware'],
+      ['Dimensions','105 × 65 × 11 mm · 78 g'],
+    ],
+  },
+];
+</script>
+
+<!-- ========================================================================
+     HUD CHROME
+     ======================================================================== -->
+<div class="hud" aria-hidden="true">
+  <span class="corner tl"></span><span class="corner tr"></span>
+  <span class="corner bl"></span><span class="corner br"></span>
+  <div class="hud-bar top">
+    <div class="seg"><span><i class="dot"></i>RV / SYS — ONLINE</span><span>BUILD 04.26</span></div>
+    <nav class="nav-top">
+      <a href="Roadvault Explorer.html" class="nav-link is-active">PRODUCT</a>
+      <a href="Funding Brief.html" class="nav-link">FUNDING</a>
+      <a href="Roadmap.html" class="nav-link">ROADMAP</a>
+      <a href="Deck.html" class="nav-link">DECK</a>
+      <a href="Founder List.html" class="nav-link">FOUNDER LIST</a>
+    </nav>
+  </div>
+  <div class="hud-bar bot">
+    <div class="seg"><span>HOVER &middot; INSPECT</span><span>CLICK &middot; ISOLATE</span><span>ESC &middot; RETURN</span></div>
+    <div class="seg"><span id="coord">+00.000 / +00.000</span></div>
+  </div>
+</div>
+
+<!-- ========================================================================
+     LOCKUP
+     ======================================================================== -->
+<header class="lockup">
+  <svg class="logo" viewBox="0 0 320 80" role="img" aria-label="RoadVault">
+    <rect class="signal" x="4" y="8" width="64" height="64" rx="8"></rect>
+    <rect class="stroke" x="14" y="18" width="44" height="44" rx="4"></rect>
+    <path class="ink" d="M24 52V28h15.4c6.4 0 10.4 3.5 10.4 8.6 0 3.6-2 6.2-5.1 7.5L52 52h-9.4l-6.1-7h-4V52H24Zm8.5-13.6h6.1c2.2 0 3.4-.8 3.4-2.4s-1.2-2.5-3.4-2.5h-6.1v4.9Zm21.3 13.6V28h8.5v24h-8.5Z"></path>
+    <text class="wordmark" x="88" y="50">ROADVAULT</text>
+  </svg>
+  <div class="badge">Field-tested kit / SS-26</div>
+  <h1>The creator gear<br/>system<span class="slash">.</span></h1>
+  <p class="sub">Six artifacts, designed to keep your shoot from disappearing. Hover any object on the table to inspect — click to isolate.</p>
+  <div class="meta">
+    <div>Origin<span>Berlin / PDX</span></div>
+    <div>Index<span>RV-001 → 006</span></div>
+    <div>Status<span style="color:var(--accent)">Shipping</span></div>
+  </div>
+</header>
+
+<!-- ========================================================================
+     INDEX RAIL
+     ======================================================================== -->
+<nav class="rail" id="rail" aria-label="Product index">
+  <button class="rail-toggle" id="railToggle" type="button" aria-expanded="false" aria-controls="railMenu">
+    <span class="label">Product index</span>
+    <span class="current" id="railCurrent">Select artifact</span>
+    <span class="chev">⌄</span>
+  </button>
+  <div class="rail-menu" id="railMenu"></div>
+</nav>
+
+<!-- ========================================================================
+     STAGE
+     ======================================================================== -->
+<main>
+  <section class="stage" id="stage">
+    <div class="stage-inner" id="stageInner">
+      <div class="hero-photo" id="heroPhoto"></div>
+      <div class="spots" id="spots"></div>
+    </div>
+  </section>
+
+  <!-- mobile fallback list -->
+  <section class="mobile-list" id="mobileList">
+    <h3>Six artifacts &middot; tap to expand</h3>
+  </section>
+</main>
+
+<!-- ========================================================================
+     FOCUS / PANEL / SCRIM / CURSOR
+     ======================================================================== -->
+<div class="scrim" id="scrim"></div>
+
+<div class="focus-stage" id="focusStage" aria-hidden="true">
+  <div class="focus-card" id="focusCard">
+    <div class="img-wrap" id="focusImg"></div>
+    <div class="crosshair"></div>
+    <div class="scan"></div>
+    <div class="sig" id="sig"></div>
+  </div>
+</div>
+
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle" aria-hidden="true">
+  <header class="panel-head">
+    <div>
+      <div class="id-row">
+        <span class="num" id="pCode">RV-000</span>
+        <span>SPEC SHEET</span>
+        <span id="pSig">— —</span>
+      </div>
+      <h2 id="panelTitle">—</h2>
+      <p class="tagline" id="pTag">—</p>
+    </div>
+    <button class="panel-close" id="panelClose" aria-label="Close detail panel"></button>
+  </header>
+  <div class="panel-body">
+    <div class="price-row">
+      <div class="price" id="pPrice">$0</div>
+      <div class="stock" id="pStock">—</div>
+    </div>
+
+    <div>
+      <div class="section-label">Features</div>
+      <ul class="features" id="pFeatures"></ul>
+    </div>
+
+    <div>
+      <div class="section-label">Specifications</div>
+      <table class="spec-table"><tbody id="pSpecs"></tbody></table>
+    </div>
+
+    <div>
+      <button class="cta" id="pCta">
+        <span>Add to kit</span>
+        <span class="arrow">→</span>
+      </button>
+      <button class="cta-secondary">
+        <span>View build sheet</span>
+        <span>↗</span>
+      </button>
+    </div>
+  </div>
+</aside>
+
+<div class="cursor" id="cursor" aria-hidden="true">
+  <div class="ring"></div>
+  <div class="label" id="cursorLabel">INSPECT</div>
+</div>
+
+<!-- ========================================================================
+     BEHAVIOR
+     ======================================================================== -->
+<script>
+(function () {
+  const $  = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+
+  /* ---- build hotspots ---- */
+  const spotsEl = $('#spots');
+  PRODUCT_DATA.forEach((p, i) => {
+    const b = document.createElement('button');
+    b.className = 'spot';
+    b.dataset.id = p.id;
+    b.dataset.idx = i;
+    b.setAttribute('aria-label', `Inspect ${p.name}`);
+    b.style.left   = p.spot.x + '%';
+    b.style.top    = p.spot.y + '%';
+    b.style.width  = p.spot.w + '%';
+    b.style.height = p.spot.h + '%';
+    b.innerHTML = `
+      <span class="silhouette"></span>
+      <span class="tag">
+        <span>${p.name}</span><span class="code">${p.code}</span>
+      </span>`;
+    const silhouette = b.querySelector('.silhouette');
+    silhouette.style.setProperty('--product-image', `url('${p.img}')`);
+    silhouette.style.setProperty('--product-mask', `url('${p.img}')`);
+    spotsEl.appendChild(b);
+  });
+
+  /* ---- index rail ---- */
+  const railEl = $('#railMenu');
+  const railWrap = $('#rail');
+  const railToggle = $('#railToggle');
+  const railCurrent = $('#railCurrent');
+  railToggle.addEventListener('click', () => {
+    const open = railWrap.classList.toggle('is-open');
+    railToggle.setAttribute('aria-expanded', String(open));
+  });
+  PRODUCT_DATA.forEach((p, i) => {
+    const a = document.createElement('button');
+    a.className = 'item';
+    a.dataset.id = p.id;
+    a.innerHTML = `
+      <span class="num">${String(i+1).padStart(2,'0')}</span>
+      <span class="tick"></span>
+      <span class="lbl">${p.name}</span>`;
+    a.addEventListener('mouseenter', () => setHotspotActive(p.id));
+    a.addEventListener('mouseleave', clearHotspotActive);
+    a.addEventListener('focus', () => setHotspotActive(p.id));
+    a.addEventListener('blur', clearHotspotActive);
+    a.addEventListener('click', () => {
+      railCurrent.textContent = p.name;
+      railWrap.classList.remove('is-open');
+      railToggle.setAttribute('aria-expanded', 'false');
+      openProduct(p.id);
+    });
+    railEl.appendChild(a);
+  });
+
+  /* ---- mobile list ---- */
+  const mobile = $('#mobileList');
+  PRODUCT_DATA.forEach((p, i) => {
+    const item = document.createElement('div');
+    item.className = 'm-item';
+    item.innerHTML = `
+      <div class="m-item-head">
+        <span class="num">${String(i+1).padStart(2,'0')}</span>
+        <span class="nm">${p.name}</span>
+        <span class="chev">+</span>
+      </div>
+      <div class="body">
+        <p>${p.tagline}</p>
+        <ul style="padding-left:0;list-style:none;margin:10px 0 0">
+          ${p.features.map(f => `<li style="padding:6px 0;border-top:1px solid var(--hair)">${f[1]}</li>`).join('')}
+        </ul>
+        <div style="margin-top:14px;color:var(--accent);letter-spacing:.16em">${p.price} &middot; ${p.code}</div>
+      </div>`;
+    item.querySelector('.m-item-head').addEventListener('click', () => item.classList.toggle('is-open'));
+    mobile.appendChild(item);
+  });
+
+  /* ---- hover desat ---- */
+  const spotsContainer = $('#spots');
+  function setHotspotActive(id) {
+    if (!id) return;
+    spotsContainer.classList.add('is-hovering');
+    $$('#spots .spot').forEach(spot => {
+      spot.classList.toggle('is-active', spot.dataset.id === id);
+    });
+    $$('#railMenu .item').forEach(item => {
+      item.classList.toggle('is-active', item.dataset.id === id);
+    });
+    const product = PRODUCT_DATA.find(p => p.id === id);
+    if (product) railCurrent.textContent = product.name;
+  }
+
+  function clearHotspotActive() {
+    spotsContainer.classList.remove('is-hovering');
+    $$('#spots .spot.is-active').forEach(spot => spot.classList.remove('is-active'));
+    $$('#railMenu .item.is-active').forEach(item => item.classList.remove('is-active'));
+    railCurrent.textContent = 'Select artifact';
+  }
+
+  $$('#spots .spot').forEach(s => {
+    s.addEventListener('mouseenter', () => setHotspotActive(s.dataset.id));
+    s.addEventListener('mouseleave', clearHotspotActive);
+    s.addEventListener('focus',     () => setHotspotActive(s.dataset.id));
+    s.addEventListener('blur',      clearHotspotActive);
+    s.addEventListener('click', () => openProduct(s.dataset.id));
+  });
+
+  /* ---- custom cursor ---- */
+  const cursor = $('#cursor');
+  const cursorLabel = $('#cursorLabel');
+  const coord = $('#coord');
+  let mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+    const nx = (e.clientX / innerWidth - 0.5) * 1000 / 10;
+    const ny = (e.clientY / innerHeight - 0.5) * 1000 / 10;
+    coord.textContent =
+      (nx >= 0 ? '+' : '') + nx.toFixed(3).padStart(7,'0') + ' / ' +
+      (ny >= 0 ? '+' : '') + ny.toFixed(3).padStart(7,'0');
+  });
+
+  /* enter cursor-hot only inside stage */
+  const stage = $('#stage');
+  stage.addEventListener('mouseenter', () => document.body.classList.add('cursor-hot'));
+  stage.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hot'));
+  spotsContainer.addEventListener('mouseover', e => {
+    const s = e.target.closest('.spot');
+    if (!s) return;
+    document.body.classList.add('cursor-active');
+    cursorLabel.textContent = (PRODUCT_DATA.find(p=>p.id===s.dataset.id)?.name || 'INSPECT').toUpperCase();
+  });
+  spotsContainer.addEventListener('mouseout', e => {
+    if (!e.target.closest('.spot')) return;
+    document.body.classList.remove('cursor-active');
+    cursorLabel.textContent = 'INSPECT';
+  });
+
+  /* ---- idle parallax (disabled) ---- */
+  const stageInner = $('#stageInner');
+  const heroPhoto = $('#heroPhoto');
+  stageInner.style.transform = '';
+
+  /* ---- subtle scroll zoom ---- */
+  window.addEventListener('scroll', () => {
+    const s = Math.min(1.05, 1 + window.scrollY / window.innerHeight * 0.05);
+    heroPhoto.style.setProperty('--zoom', s);
+    if (!stage.classList.contains('is-focused')) {
+      heroPhoto.style.transform = `scale(${s})`;
+    }
+  }, { passive: true });
+
+  /* ---- page load stagger ---- */
+  gsap.from('#spots .spot', {
+    opacity: 0, y: 8, duration: 0.5, stagger: 0.1, delay: 0.4, ease: 'power2.out'
+  });
+  gsap.from('.lockup .badge, .lockup h1, .lockup .sub, .lockup .meta', {
+    opacity: 0, y: 14, duration: 0.7, stagger: 0.08, ease: 'power3.out'
+  });
+  gsap.from('.rail .item', {
+    opacity: 0, x: 12, duration: 0.5, stagger: 0.05, delay: 0.5, ease: 'power2.out'
+  });
+
+  /* ====================================================================
+     OPEN / CLOSE PRODUCT
+     ==================================================================== */
+  const focusStage = $('#focusStage');
+  const focusCard  = $('#focusCard');
+  const focusImg   = $('#focusImg');
+  const sigEl      = $('#sig');
+  const panel      = $('#panel');
+  const scrim      = $('#scrim');
+  let activeId = null;
+  let rotateTween = null;
+  let sigTimeline = null;
+  let scrollScrub = null;
+  let scrollIdleT = null;
+  let dragDown = null, dragMove = null, dragUp = null;
+
+  function openProduct(id) {
+    if (activeId === id) return;
+    if (activeId) closeProduct({ instant: true });
+    const p = PRODUCT_DATA.find(x => x.id === id);
+    if (!p) return;
+    activeId = id;
+
+    /* fill panel */
+    $('#pCode').textContent  = p.code;
+    $('#pSig').textContent   = `SIG · ${p.sig.toUpperCase()}`;
+    $('#panelTitle').textContent = p.name;
+    $('#pTag').textContent   = p.tagline;
+    $('#pPrice').textContent = p.price;
+    $('#pStock').textContent = p.stock;
+
+    const feats = $('#pFeatures'); feats.innerHTML = '';
+    p.features.forEach(([k, v]) => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="k">${k}</span><span>${v}</span>`;
+      feats.appendChild(li);
+    });
+    const specs = $('#pSpecs'); specs.innerHTML = '';
+    p.specs.forEach(([k, v]) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${k}</td><td>${v}</td>`;
+      specs.appendChild(tr);
+    });
+
+    /* swap focus image to product cutout */
+    focusImg.style.backgroundImage = `url('${p.img}')`;
+
+    /* reveal stage */
+    stage.classList.add('is-focused');
+    focusStage.classList.add('is-on');
+    focusStage.setAttribute('aria-hidden', 'false');
+    scrim.classList.add('is-on');
+    panel.setAttribute('aria-hidden', 'false');
+
+    gsap.to(scrim, { opacity: 1, duration: 0.4, ease: 'power2.out' });
+
+    /* reset card */
+    gsap.killTweensOf(focusCard);
+    gsap.set(focusCard, { opacity: 0, x: '-12vw', y: 0, z: -200, scale: 0.7, rotationY: -45, rotationX: 12 });
+
+    /* play signature first, then float + rotate */
+    runSignature(p.sig);
+
+    /* cinematic entrance: dolly in from depth, settle into a slow 360° spin */
+    gsap.to(focusCard, {
+      opacity: 1, x: '-12vw', y: 0, z: 0, scale: 1, rotationY: 0, rotationX: 0,
+      duration: 1.1, ease: 'expo.out',
+    });
+
+    /* slow continuous 360° rotate — power1.inOut keeps it cinematic */
+    rotateTween = gsap.to(focusCard, {
+      rotationY: '+=360', duration: 22, ease: 'none', repeat: -1, delay: 1.0,
+    });
+
+    /* gentle vertical float — adds dimensionality */
+    gsap.to(focusCard, {
+      y: '-=14', duration: 3.4, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.0,
+    });
+
+    /* scroll / wheel scrubs rotation — inside focus only */
+    scrollScrub = (e) => {
+      e.preventDefault();
+      const delta = e.deltaY * 0.4;
+      // pause auto-rotate briefly when user scrubs
+      if (rotateTween) {
+        rotateTween.pause();
+        clearTimeout(scrollIdleT);
+        scrollIdleT = setTimeout(() => rotateTween && rotateTween.resume(), 1400);
+      }
+      gsap.to(focusCard, {
+        rotationY: '+=' + delta,
+        rotationX: '+=' + (e.deltaX || 0) * 0.2,
+        duration: 0.6, ease: 'power2.out', overwrite: 'auto',
+      });
+    };
+    focusStage.addEventListener('wheel', scrollScrub, { passive: false });
+
+    /* drag to rotate — click + drag spins the product manually */
+    let dragging = false, dragX = 0, dragY = 0;
+    dragDown = (e) => {
+      if (e.target.closest('.focus-card') === null) return;
+      dragging = true; dragX = e.clientX; dragY = e.clientY;
+      if (rotateTween) rotateTween.pause();
+      focusCard.style.cursor = 'grabbing';
+    };
+    dragMove = (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - dragX;
+      const dy = e.clientY - dragY;
+      dragX = e.clientX; dragY = e.clientY;
+      gsap.to(focusCard, {
+        rotationY: '+=' + dx * 0.6,
+        rotationX: '-=' + dy * 0.4,
+        duration: 0.3, ease: 'power2.out', overwrite: 'auto',
+      });
+    };
+    dragUp = () => {
+      if (!dragging) return;
+      dragging = false;
+      focusCard.style.cursor = 'grab';
+      clearTimeout(scrollIdleT);
+      scrollIdleT = setTimeout(() => rotateTween && rotateTween.resume(), 1400);
+    };
+    focusCard.style.cursor = 'grab';
+    focusStage.addEventListener('mousedown', dragDown);
+    window.addEventListener('mousemove', dragMove);
+    window.addEventListener('mouseup', dragUp);
+
+    /* slide panel */
+    gsap.fromTo(panel, { x: '100%' }, { x: '0%', duration: 0.55, ease: 'power3.out' });
+  }
+
+  function closeProduct({ instant = false } = {}) {
+    if (!activeId) return;
+    activeId = null;
+
+    if (scrollScrub) { focusStage.removeEventListener('wheel', scrollScrub); scrollScrub = null; }
+    if (dragDown) {
+      focusStage.removeEventListener('mousedown', dragDown);
+      window.removeEventListener('mousemove', dragMove);
+      window.removeEventListener('mouseup', dragUp);
+      dragDown = dragMove = dragUp = null;
+    }
+    clearTimeout(scrollIdleT);
+    if (rotateTween) { rotateTween.kill(); rotateTween = null; }
+    if (sigTimeline) { sigTimeline.kill(); sigTimeline = null; }
+
+    const dur = instant ? 0 : 0.45;
+    gsap.to(panel,     { x: '100%', duration: dur, ease: 'power2.in', onComplete: () => panel.setAttribute('aria-hidden', 'true') });
+    gsap.to(scrim,     { opacity: 0, duration: dur, onComplete: () => scrim.classList.remove('is-on') });
+    gsap.to(focusCard, { opacity: 0, scale: 0.7, duration: dur, ease: 'power2.in', onComplete: () => {
+      focusStage.classList.remove('is-on');
+      focusStage.setAttribute('aria-hidden', 'true');
+      stage.classList.remove('is-focused');
+      sigEl.innerHTML = '';
+    } });
+  }
+
+  /* close handlers */
+  $('#panelClose').addEventListener('click', () => closeProduct());
+  scrim.addEventListener('click', () => closeProduct());
+  /* clicking anywhere on the focus stage outside the card closes too */
+  focusStage.addEventListener('click', (e) => {
+    if (!e.target.closest('.focus-card')) closeProduct();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProduct(); });
+
+  /* CTA flash */
+  $('#pCta').addEventListener('click', () => {
+    const c = $('#pCta');
+    const orig = c.querySelector('span').textContent;
+    c.querySelector('span').textContent = 'Added — view kit →';
+    c.style.background = 'transparent';
+    c.style.color = 'var(--accent)';
+    setTimeout(() => {
+      c.querySelector('span').textContent = orig;
+      c.style.background = '';
+      c.style.color = '';
+    }, 1600);
+  });
+
+  /* ====================================================================
+     SIGNATURE ANIMATIONS
+     each populates #sig with elements and animates them, then clears
+     ==================================================================== */
+  function clearSig() { sigEl.innerHTML = ''; }
+
+  function runSignature(kind) {
+    clearSig();
+    if (sigTimeline) sigTimeline.kill();
+
+    if (kind === 'ssd') {
+      // green LED blinks 3 times — bottom of SSD, right of USB-C port
+      const led = document.createElement('div');
+      led.className = 'sig-led';
+      led.style.left = '60%'; led.style.top = '82%';
+      sigEl.appendChild(led);
+      sigTimeline = gsap.timeline();
+      for (let i = 0; i < 3; i++) {
+        sigTimeline.to(led, { opacity: 1, duration: 0.18, ease: 'power2.out' })
+                   .to(led, { opacity: 0, duration: 0.18, ease: 'power2.in', delay: 0.05 });
+      }
+      sigTimeline.to(led, { opacity: 1, duration: 0.4 }); // settle on
+    }
+
+    else if (kind === 'nfc') {
+      // 3 pulsing rings emit from the wireless icon (center-top of card)
+      const cx = 50, cy = 38;
+      sigTimeline = gsap.timeline();
+      for (let i = 0; i < 3; i++) {
+        const r = document.createElement('div');
+        r.className = 'sig-wave';
+        r.style.left = cx + '%'; r.style.top = cy + '%';
+        r.style.width = '10px'; r.style.height = '10px';
+        r.style.transform = 'translate(-50%,-50%)';
+        sigEl.appendChild(r);
+        sigTimeline.fromTo(r,
+          { width: '10px', height: '10px', opacity: 0.9 },
+          { width: '50%',  height: '50%',  opacity: 0, duration: 1.2, ease: 'power2.out' },
+          i * 0.25
+        );
+      }
+    }
+
+    else if (kind === 'qr') {
+      // 3 stickers peel up sequentially — match the QR sticker positions
+      sigTimeline = gsap.timeline();
+      [[28, 28], [28, 50], [28, 72]].forEach(([x, y], i) => {
+        const sq = document.createElement('div');
+        sq.className = 'sig-peel';
+        sq.style.left = x + '%'; sq.style.top = y + '%';
+        sq.style.transformOrigin = 'left center';
+        sigEl.appendChild(sq);
+        sigTimeline.fromTo(sq,
+          { opacity: 0, rotationY: 0, x: 0, y: 0 },
+          { opacity: 1, rotationY: -55, x: -12, y: -10, duration: 0.55, ease: 'power2.out' },
+          i * 0.18
+        ).to(sq, { rotationY: 0, x: 0, y: 0, duration: 0.4, ease: 'power2.in' }, '+=0.1');
+      });
+    }
+
+    else if (kind === 'setvault') {
+      // drives lift and fan
+      sigTimeline = gsap.timeline();
+      [[20, 60], [34, 58], [48, 60], [62, 58]].forEach(([x, y], i) => {
+        const d = document.createElement('div');
+        d.className = 'sig-drive';
+        d.style.left = x + '%'; d.style.top = y + '%';
+        sigEl.appendChild(d);
+        sigTimeline.fromTo(d,
+          { opacity: 0, y: 0, rotation: 0 },
+          { opacity: 1, y: -30 - i*4, rotation: (i-1.5)*8, duration: 0.55, ease: 'back.out(1.4)' },
+          i * 0.1
+        );
+      });
+    }
+
+    else if (kind === 'labels') {
+      // labels detach and fan deck-of-cards
+      sigTimeline = gsap.timeline();
+      [0,1,2,3,4].forEach(i => {
+        const l = document.createElement('div');
+        l.className = 'sig-label';
+        l.style.left = '38%'; l.style.top = '40%';
+        sigEl.appendChild(l);
+        sigTimeline.fromTo(l,
+          { opacity: 0, x: 0, y: 0, rotation: 0 },
+          {
+            opacity: 1,
+            x: (i-2) * 26,
+            y: -10 - i*2,
+            rotation: (i-2) * 8,
+            duration: 0.6, ease: 'power2.out',
+          },
+          i * 0.08
+        );
+      });
+    }
+
+    else if (kind === 'pouch') {
+      // zipper line crosses, then tracker glows
+      const zip = document.createElement('div');
+      zip.className = 'sig-zip';
+      zip.style.left = '20%'; zip.style.top = '32%';
+      sigEl.appendChild(zip);
+      const t = document.createElement('div');
+      t.className = 'sig-tracker';
+      t.style.left = '52%'; t.style.top = '46%';
+      t.style.transform = 'translate(-50%,-50%)';
+      sigEl.appendChild(t);
+      sigTimeline = gsap.timeline()
+        .fromTo(zip, { scaleX: 0, opacity: 1, transformOrigin: 'left' },
+                     { scaleX: 1, duration: 0.7, ease: 'power2.inOut' })
+        .fromTo(t,   { opacity: 0, scale: 0.6 },
+                     { opacity: 1, scale: 1, duration: 0.7, ease: 'power2.out' }, '-=0.2')
+        .to(t, { boxShadow: '0 0 30px var(--accent-glow)', duration: 0.4, repeat: 2, yoyo: true });
+    }
+  }
+
+})();
+</script>
+
+</body>
+</html>

@@ -3,11 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>RoadVault — Funding Brief / Pre-POC</title>
+<title>RoadVault — Whitepaper / Pre-POC Dossier</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script defer src="page-loader.js"></script>
 <style>
 :root {
   --bg: #0a0b0a;
@@ -830,8 +829,8 @@ p { margin: 0; }
 .legal-block p:last-child { margin: 0; }
 .legal-block strong { color: var(--ink); font-weight: 600; }
 
-/* ============ SIMPLIFIED FUNDING BRIEF ============ */
-body.funding-simple .hud {
+/* Whitepaper uses page chrome, not overlay chrome, so nav/border text never covers content. */
+body.whitepaper-page .hud {
   position: sticky;
   top: 0;
   height: 68px;
@@ -842,113 +841,52 @@ body.funding-simple .hud {
   background: rgba(10, 11, 10, 0.96);
   backdrop-filter: blur(12px);
 }
-body.funding-simple .hud .corner,
-body.funding-simple .hud-bar.bot {
+body.whitepaper-page .hud .corner,
+body.whitepaper-page .hud-bar.bot {
   display: none;
 }
-body.funding-simple .hud-bar {
+body.whitepaper-page .hud-bar {
   position: static;
   height: 68px;
   padding: 0 32px;
 }
-body.funding-simple .hud-bar.top {
+body.whitepaper-page .hud-bar.top {
   top: auto;
 }
-body.funding-simple .cta-rail {
+body.whitepaper-page .cta-rail {
   display: none;
 }
-body.funding-simple section:nth-of-type(4),
-body.funding-simple section:nth-of-type(5),
-body.funding-simple section:nth-of-type(6),
-body.funding-simple section:nth-of-type(7),
-body.funding-simple section:nth-of-type(8),
-body.funding-simple section:nth-of-type(9),
-body.funding-simple section:nth-of-type(10),
-body.funding-simple section:nth-of-type(11),
-body.funding-simple section:nth-of-type(12) {
-  display: none;
+body.whitepaper-page section {
+  scroll-margin-top: 90px;
 }
-body.funding-simple .hero {
+body.whitepaper-page .hero {
   min-height: calc(100vh - 68px);
   padding-top: 84px;
 }
-body.funding-simple section {
-  scroll-margin-top: 90px;
-}
-body.funding-simple section .sec-num,
-body.funding-simple section .sec-meta {
+body.whitepaper-page section .sec-num,
+body.whitepaper-page section .sec-meta {
   top: 24px;
 }
-body.funding-simple .brief-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 32px;
-}
-body.funding-simple .brief-actions a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  min-width: 190px;
-  border: 1px solid var(--hair-strong);
-  padding: 12px 14px;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink);
-  background: rgba(20,22,19,0.55);
-}
-body.funding-simple .brief-actions a.primary {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-body.funding-simple .brief-actions a.whitepaper {
-  border-color: rgba(255,122,61,0.48);
-  color: var(--orange);
-}
-body.funding-simple .brief-actions a:hover {
-  background: rgba(157,255,60,0.08);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-body.funding-simple .snap-grid {
-  grid-template-columns: repeat(4, 1fr);
-}
-body.funding-simple .legal-block {
-  margin-top: 44px;
-}
 @media (max-width: 900px) {
-  body.funding-simple .hud {
+  body.whitepaper-page .hud {
     height: auto;
   }
-  body.funding-simple .hud-bar {
+  body.whitepaper-page .hud-bar {
     min-height: 68px;
     height: auto;
     padding: 14px 20px;
     flex-wrap: wrap;
     gap: 12px;
   }
-  body.funding-simple .nav-top {
+  body.whitepaper-page .nav-top {
     max-width: 100%;
     overflow-x: auto;
     padding-bottom: 4px;
   }
-  body.funding-simple .snap-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 540px) {
-  body.funding-simple .snap-grid {
-    grid-template-columns: 1fr;
-  }
-  body.funding-simple .brief-actions a {
-    width: 100%;
-  }
 }
 </style>
 </head>
-<body class="funding-simple">
+<body class="whitepaper-page">
 
 <div class="hud" aria-hidden="true">
   <span class="corner tl"></span><span class="corner tr"></span>
@@ -998,7 +936,10 @@ body.funding-simple .legal-block {
         move.
       </h1>
       <p class="tagline">
-        Pre-POC. Pre-production. Raising <strong style="color:var(--ink)">$35K–$75K</strong> to build campaign-grade prototypes and validate the first production path.
+        RoadVault is a pre-POC hardware system for working creators.
+        We're raising <strong style="color:var(--ink)">$35K–$75K</strong> to build campaign-grade prototypes
+        and validate the first production path. This is not a preorder.
+        It's a working dossier and a build plan.
       </p>
       <div class="hero-quick">
         <strong>$35K–$75K</strong>
@@ -1006,17 +947,6 @@ body.funding-simple .legal-block {
         <span>Pre-POC raise</span>
         <span class="div"></span>
         <span>120-day window</span>
-      </div>
-      <div class="brief-actions" aria-label="Funding actions">
-        <a class="primary" href="mailto:invest@roadvault.co?subject=RoadVault%20%E2%80%94%20Investor%20call">
-          <span>Investor Call</span><span>→</span>
-        </a>
-        <a href="mailto:partners@roadvault.co?subject=RoadVault%20%E2%80%94%20Sponsor%20pledge">
-          <span>Sponsor POC</span><span>$</span>
-        </a>
-        <a class="whitepaper" href="Whitepaper.html">
-          <span>Read Whitepaper</span><span>↗</span>
-        </a>
       </div>
     </div>
 
@@ -1027,11 +957,13 @@ body.funding-simple .legal-block {
         <div class="row"><span>Stage</span><span>Pre-POC prototype</span></div>
         <div class="row"><span>Raise</span><span>$35K min · $75K ideal</span></div>
         <div class="row"><span>Vehicle</span><span>SAFE / sponsor pledge</span></div>
-        <div class="row"><span>Use</span><span>Prototype build</span></div>
+        <div class="row"><span>Use</span><span>Campaign-grade build</span></div>
         <div class="row"><span>Window</span><span>120 days</span></div>
         <div class="row"><span>Status</span><span style="color:var(--accent)">Open · taking calls</span></div>
       </div>
-      <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);">Brief view · whitepaper available</div>
+      <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);">
+        ↓ scroll · 12 sections
+      </div>
     </aside>
   </div>
 </section>
@@ -1042,25 +974,20 @@ body.funding-simple .legal-block {
   <div class="sec-meta">At a glance</div>
   <div class="wrap">
     <div class="eyebrow">Investor snapshot</div>
-    <h2 style="max-width:18ch;">Eight cells. One read.</h2>
+    <h2 style="max-width:18ch;">The whole brief in eight cells.</h2>
+    <p class="lede" style="margin-top:20px; max-width:64ch;">
+      For the 90-second read. Everything below this section expands on one of these cells.
+    </p>
 
     <div class="snap-grid" style="margin-top:48px;">
-      <div class="snap-cell"><div class="k">Category</div><div class="v">Trackable gear protection</div><div class="sub">Creator gear system.</div></div>
-      <div class="snap-cell accent"><div class="k">Stage</div><div class="v">Pre-POC · prototype build</div><div class="sub">Pre-production.</div></div>
-      <div class="snap-cell accent"><div class="k">Raise</div><div class="v">$35K min · $75K ideal</div><div class="sub">SAFE / sponsor pledge.</div></div>
-      <div class="snap-cell"><div class="k">First product</div><div class="v">TourVault &amp; SetVault</div><div class="sub">Pouch + hard case.</div></div>
-      <div class="snap-cell"><div class="k">Future flagship</div><div class="v">SessionVault Smart SSD</div><div class="sub">Roadmap product.</div></div>
-      <div class="snap-cell"><div class="k">Use of funds</div><div class="v">Prototypes · media · web · launch</div><div class="sub">Full detail in whitepaper.</div></div>
-      <div class="snap-cell"><div class="k">Customers</div><div class="v">Working creators</div><div class="sub">Solo, touring, small teams.</div></div>
-      <div class="snap-cell accent"><div class="k">Paths</div><div class="v">Investor · Sponsor · Founder</div><div class="sub">Pick a lane below.</div></div>
-    </div>
-    <div class="brief-actions" aria-label="Extended details">
-      <a class="whitepaper" href="Whitepaper.html">
-        <span>Open Full Whitepaper</span><span>↗</span>
-      </a>
-      <a href="Deck.html">
-        <span>View Deck</span><span>→</span>
-      </a>
+      <div class="snap-cell"><div class="k">Category</div><div class="v">Trackable gear protection</div><div class="sub">Creator-tuned hardware system, post-Pelican.</div></div>
+      <div class="snap-cell accent"><div class="k">Stage</div><div class="v">Pre-POC · prototype build</div><div class="sub">Pre-revenue, pre-production. Not yet manufactured.</div></div>
+      <div class="snap-cell accent"><div class="k">Raise</div><div class="v">$35K min · $75K ideal</div><div class="sub">SAFE / sponsor pledge / hybrid. 120-day window.</div></div>
+      <div class="snap-cell"><div class="k">First product</div><div class="v">TourVault &amp; SetVault</div><div class="sub">Tracker-compatible pouch + foam-fit hard case.</div></div>
+      <div class="snap-cell"><div class="k">Future flagship</div><div class="v">SessionVault Smart SSD</div><div class="sub">Encrypted SSD with NFC pairing. Post-V1 roadmap.</div></div>
+      <div class="snap-cell"><div class="k">Use of funds</div><div class="v">Prototypes · photo · web · MOQ</div><div class="sub">Six allocations, full breakdown in §08.</div></div>
+      <div class="snap-cell"><div class="k">Target customers</div><div class="v">Working creators</div><div class="sub">Solo operators, touring crews, small production houses.</div></div>
+      <div class="snap-cell accent"><div class="k">Funding paths</div><div class="v">Investor · Sponsor · Founder</div><div class="sub">Three distinct conversations. See §11.</div></div>
     </div>
   </div>
 </section>
@@ -1073,7 +1000,8 @@ body.funding-simple .legal-block {
     <div class="eyebrow">The ask</div>
     <h2 style="max-width:18ch;">Two numbers. Both honest.</h2>
     <p class="lede" style="margin-top:20px;">
-      The floor gets a credible prototype set. The ideal validates the first production path.
+      The minimum is what gets a working campaign-grade kit on a table.
+      The ideal lets us validate the production path before we ship a single unit.
     </p>
 
     <div class="ask-wrap" style="margin-top:48px;">
@@ -1083,10 +1011,11 @@ body.funding-simple .legal-block {
         </div>
         <div class="num">$35K<small>USD</small></div>
         <div class="desc">
-          First full prototype pass, product media, and launch assets.
+          Buys one full pass of campaign-grade prototypes across all four products,
+          plus the photography and copy needed to launch a credible Kickstarter.
         </div>
         <div class="runway">
-          <span class="k">Covers</span><span>Tooling, media, campaign setup</span>
+          <span class="k">Covers</span><span>Prototype tooling, photography, brand kit</span>
           <span class="k">Runway</span><span>~4 months to campaign launch</span>
         </div>
       </div>
@@ -1096,10 +1025,11 @@ body.funding-simple .legal-block {
         </div>
         <div class="num">$75K<small>USD</small></div>
         <div class="desc">
-          Adds a small run, QA, and fulfillment planning.
+          Adds a small DDP run with a confirmed manufacturer, end-to-end QA,
+          and a pre-paid logistics chain — so day-one fulfillment is real, not theoretical.
         </div>
         <div class="runway">
-          <span class="k">Adds</span><span>Manufacturer, QA, logistics</span>
+          <span class="k">Adds</span><span>MOQ run, QA, fulfillment partner</span>
           <span class="k">Runway</span><span>~6 months to first ship</span>
         </div>
       </div>
@@ -1107,7 +1037,10 @@ body.funding-simple .legal-block {
 
     <p class="ask-honest">
       <strong>Honest framing:</strong>
-      Not a preorder. Not guaranteed manufacturing. V1 is <em>tracker-compatible</em>, not tracker-made. Specs and timing may change.
+      This raise funds prototypes and validates the production path. It is not a preorder,
+      not a guarantee of finished manufacturing, and not certified by any tracker manufacturer.
+      RoadVault V1 is designed to be <em>tracker-compatible</em> — a passive sleeve that holds a
+      tracking device the user already owns. Specifications and timelines are subject to change.
     </p>
   </div>
 </section>
@@ -1359,11 +1292,14 @@ body.funding-simple .legal-block {
 
 <!-- =================== WHAT THE MONEY BUILDS =================== -->
 <section class="reveal">
-  <div class="sec-num">04 / What the money builds</div>
+  <div class="sec-num">09 / What the money builds</div>
   <div class="sec-meta">Deliverables by tier</div>
   <div class="wrap">
     <div class="eyebrow">What the money builds</div>
-    <h2 style="max-width:20ch;">What the raise buys.</h2>
+    <h2 style="max-width:20ch;">Two tiers. Two concrete deliverables lists.</h2>
+    <p class="lede" style="margin-top:20px; max-width:64ch;">
+      The percentages above tell you where money goes. This tells you what you get for it.
+    </p>
 
     <div class="builds-grid" style="margin-top:48px;">
       <div class="builds-tile">
@@ -1371,14 +1307,15 @@ body.funding-simple .legal-block {
           <span class="label-pill">Floor · Campaign-grade build</span>
           <span class="amt">$35K<small>USD</small></span>
         </div>
-        <h4>By T+90</h4>
+        <h4>By T+90 — campaign launch ready.</h4>
         <ul>
+          <li>Campaign-grade prototypes (one full pass)</li>
           <li>TourVault Tech Pouch sample</li>
           <li>SetVault USB / SD Vault sample</li>
           <li>NFC / QR recovery system MVP</li>
-          <li>Product photography</li>
-          <li>Supplier quotes</li>
-          <li>Launch assets</li>
+          <li>Product photography + video</li>
+          <li>Supplier quotes &amp; manufacturer shortlist</li>
+          <li>Campaign launch assets (copy, brand, page)</li>
         </ul>
       </div>
       <div class="builds-tile ideal">
@@ -1386,15 +1323,15 @@ body.funding-simple .legal-block {
           <span class="label-pill">Ideal · Validated production path</span>
           <span class="amt">$75K<small>USD</small></span>
         </div>
-        <h4>Adds by T+120</h4>
+        <h4>Adds T+120 production validation.</h4>
         <ul>
           <li>Small DDP / beta production run</li>
-          <li>Manufacturer confirmation</li>
-          <li>Packaging samples</li>
-          <li>QA plan</li>
-          <li>Fulfillment plan</li>
-          <li>Pre-campaign marketing</li>
-          <li>Launch content package</li>
+          <li>Manufacturer confirmation &amp; signed terms</li>
+          <li>Final retail packaging design</li>
+          <li>End-to-end QA on a real batch</li>
+          <li>Fulfillment plan + 3PL partner</li>
+          <li>Pre-campaign marketing &amp; PR runway</li>
+          <li>Founder-list early-bird program</li>
         </ul>
       </div>
     </div>
@@ -1492,30 +1429,26 @@ body.funding-simple .legal-block {
 
 <!-- =================== PATHS / CTA =================== -->
 <section class="reveal" id="cta">
-  <div class="sec-num">05 / Three participation paths</div>
+  <div class="sec-num">12 / Three participation paths</div>
   <div class="sec-meta">Pick your conversation</div>
   <div class="wrap">
     <div class="eyebrow">Get involved</div>
     <h2 style="max-width:20ch;">Three distinct paths. Three different conversations.</h2>
     <p class="lede" style="margin-top:20px; max-width:64ch;">
-      Same company. Different fit.
+      Each one starts the same way: a 30-minute call. The framing, paperwork, and follow-up are different.
     </p>
-    <div class="brief-actions" aria-label="Whitepaper access">
-      <a class="whitepaper" href="Whitepaper.html">
-        <span>Read Full Whitepaper</span><span>↗</span>
-      </a>
-    </div>
 
     <div class="paths-grid" style="margin-top:48px;">
       <!-- INVESTOR -->
       <div class="path-tile investor">
         <div class="num-row"><span class="num">PATH 01</span><span>INVESTOR</span></div>
         <h3>Book an investor call.</h3>
-        <p class="who">For angels, operators, and creator-economy investors.</p>
+        <p class="who">For angel investors, micro-funds, and operator-investors writing $5K–$50K checks into pre-POC hardware.</p>
         <ul class="features">
-          <li>SAFE or negotiated structure</li>
-          <li>Milestones, wedge, roadmap</li>
-          <li>Full dossier on request</li>
+          <li>SAFE or negotiated equity instrument</li>
+          <li>Full dossier on request: financials, cap table, supplier shortlist</li>
+          <li>30-min call · Q&amp;A · founder walkthrough</li>
+          <li>Quarterly investor updates post-close</li>
         </ul>
         <a class="path-cta" href="mailto:invest@roadvault.co?subject=RoadVault%20%E2%80%94%20Investor%20call">
           <span>Book investor call</span><span>→</span>
@@ -1526,12 +1459,12 @@ body.funding-simple .legal-block {
       <div class="path-tile sponsor">
         <div class="num-row"><span class="num">PATH 02</span><span>SPONSOR</span></div>
         <h3>Sponsor the POC.</h3>
-        <p class="who">For aligned brands in gear, travel, audio, storage, and creator tools.</p>
+        <p class="who">For category-aligned brands — gear, bags, audio, cards, drives — who want co-marketing baked into the campaign launch.</p>
         <ul class="features">
           <li>Sponsor pledge $5K–$25K</li>
-          <li>Co-branded prototype visibility</li>
-          <li>Launch content integration</li>
-          <li>Creator audience alignment</li>
+          <li>Logo / co-branding on prototypes &amp; campaign page</li>
+          <li>Inclusion in launch PR &amp; creator partnerships</li>
+          <li>Right of first refusal on V2 partnership</li>
         </ul>
         <a class="path-cta" href="mailto:partners@roadvault.co?subject=RoadVault%20%E2%80%94%20Sponsor%20pledge">
           <span>Request sponsor brief</span><span>→</span>
@@ -1542,11 +1475,12 @@ body.funding-simple .legal-block {
       <div class="path-tile creator">
         <div class="num-row"><span class="num">PATH 03</span><span>CREATOR</span></div>
         <h3>Join the founder list.</h3>
-        <p class="who">For creators who want first access and early pricing. Free.</p>
+        <p class="who">For working creators who want first access to prototypes and Kickstarter early-bird pricing. Free.</p>
         <ul class="features">
-          <li>Prototype updates</li>
-          <li>Early-bird access</li>
-          <li>Product feedback loop</li>
+          <li>Prototype build updates (incl. failed samples)</li>
+          <li>Kickstarter 24-hour early-bird link</li>
+          <li>Direct input on dimensions, colors, copy</li>
+          <li>SessionVault SSD waitlist priority</li>
         </ul>
         <a class="path-cta" href="Founder List.html">
           <span>Join founder list</span><span>↗</span>
@@ -1558,16 +1492,27 @@ body.funding-simple .legal-block {
     <div class="legal-block">
       <div class="title">Disclosure · Pre-POC funding</div>
       <p>
-        <strong>RoadVault is pre-production and pre-POC.</strong> This page is for exploratory investor, sponsor, and founder-interest conversations only. Specs, timelines, and availability may change.
+        <strong>RoadVault is pre-production and pre-POC.</strong> This page is for exploratory investor, sponsor,
+        and founder-interest conversations only. Product specifications, materials, dimensions, timelines,
+        and availability described herein are illustrative and subject to change without notice.
       </p>
       <p>
-        <strong>No offer of securities.</strong> Any investment will be handled through proper legal documentation and compliance review.
+        <strong>No offer of securities.</strong> This document does not constitute an offer to sell or a solicitation
+        of an offer to buy any securities. Any investment opportunity will be handled through proper legal
+        documentation, accredited-investor verification where required, and applicable jurisdictional
+        compliance review.
       </p>
       <p>
-        <strong>No manufacturer affiliation.</strong> RoadVault V1 is tracker-compatible and not affiliated with or certified by Apple Find My, Android Find Hub, or any tracker manufacturer.
+        <strong>No manufacturer affiliation.</strong> RoadVault is not affiliated with, endorsed by, or certified by
+        Apple, Apple Find My, Tile, Samsung SmartThings, or any tracker manufacturer. RoadVault V1 hardware
+        is designed to be tracker-compatible — a passive sleeve intended to hold a tracking device the user
+        already owns. No tracking technology is included with the RoadVault product itself at this stage.
       </p>
       <p>
-        <strong>No guarantee of delivery.</strong> This raise builds prototypes and validates the path to production. Shipping timelines are estimates only.
+        <strong>No guarantee of delivery.</strong> The funding described on this page builds prototypes and validates
+        the production path. No representation is made that the product will reach manufacturing on any
+        specific schedule, nor that any specific feature will be included in any shipping version.
+        Crowdfunding fulfillment timelines are estimates only.
       </p>
       <p style="margin-top:18px; font-size:11px; color:var(--ink-faint);">
         © 2026 RoadVault · Berlin / Portland · contact: invest@roadvault.co · partners@roadvault.co

@@ -1,256 +1,363 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>RoadVault | Founder List</title>
-    <meta
-      name="description"
-      content="Submit founder-interest for RoadVault as a creator, investor, sponsor, press contact, or manufacturer."
-    />
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body class="page founder-page">
-    <header class="site-header">
-      <a class="brand-mark" href="index.html" aria-label="RoadVault home">
-        <img
-          class="brand-logo"
-          src="presentation/assets/roadvault-logo.svg"
-          alt="RoadVault"
-        />
-      </a>
-      <nav class="nav-links" aria-label="Primary navigation">
-        <a href="index.html">Product</a>
-        <a href="Funding Brief.html">Funding</a>
-        <a href="Deck.html">Deck</a>
-        <a href="Founder List.html" aria-current="page">Founder List</a>
-      </nav>
-    </header>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>RoadVault — Founder List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script defer src="page-loader.js"></script>
+<style>
+:root {
+  --bg: #0a0b0a;
+  --bg-2: #111312;
+  --ink: #e8e9e4;
+  --ink-dim: #8b8d86;
+  --ink-faint: #4a4c47;
+  --hair: rgba(232,233,228,0.10);
+  --hair-strong: rgba(232,233,228,0.24);
+  --accent: #9dff3c;
+  --accent-glow: rgba(157,255,60,0.45);
+  --accent-soft: rgba(157,255,60,0.08);
+  --orange: #ff7a3d;
+  --olive: #4a513a;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --sans: 'IBM Plex Sans', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--mono); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  background-image: radial-gradient(rgba(232,233,228,0.018) 1px, transparent 1px); background-size: 3px 3px;
+  min-height: 100vh; display: flex; flex-direction: column;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
 
-    <main>
-      <section class="page-hero section-shell">
-        <div class="hero-copy">
-          <p class="section-index">ROADVAULT / FOUNDER LIST</p>
-          <h1>Signal intent with specifics.</h1>
-          <p class="hero-lede">
-            This page is for exploratory founder-interest only. Creators,
-            investors, sponsors, press, manufacturers, and early operators can
-            register interest here and get logged into the RoadVault dossier.
-          </p>
-          <div class="hero-flags">
-            <span>Pre-POC</span>
-            <span>Pre-production</span>
-            <span>Founder ID generated</span>
-          </div>
+/* ============ HUD ============ */
+.hud { position: fixed; inset: 0; pointer-events: none; z-index: 60; }
+.hud .corner { position:absolute; width:18px; height:18px; border:1px solid var(--hair-strong); }
+.hud .corner.tl { top:14px; left:14px; border-right:0; border-bottom:0; }
+.hud .corner.tr { top:14px; right:14px; border-left:0; border-bottom:0; }
+.hud .corner.bl { bottom:14px; left:14px; border-right:0; border-top:0; }
+.hud .corner.br { bottom:14px; right:14px; border-left:0; border-top:0; }
+.hud-bar {
+  position:absolute; left:32px; right:32px;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color: var(--ink-dim);
+  pointer-events: auto;
+}
+.hud-bar.top { top: 22px; }
+.hud-bar.bot {
+  bottom: 0; padding: 14px 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(10,11,10,0) 0%, rgba(10,11,10,0.92) 40%, rgba(10,11,10,0.96) 100%);
+  backdrop-filter: blur(6px);
+}
+.hud-bar .dot {
+  display:inline-block; width:6px; height:6px; background: var(--accent);
+  margin-right:8px; vertical-align:middle; box-shadow: 0 0 8px var(--accent-glow);
+  animation: dot-pulse 2s infinite;
+}
+@keyframes dot-pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+.nav-top { display:flex; gap: 22px; }
+.nav-top a {
+  font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color: var(--ink-dim);
+  padding-bottom:3px; border-bottom:1px solid transparent; transition: color .2s, border-color .2s;
+  white-space: nowrap;
+}
+.nav-top a:hover { color: var(--ink); }
+.nav-top a.is-active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ============ MAIN ============ */
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 56px; width: 100%; }
+@media (max-width: 720px) { .wrap { padding: 0 20px; } }
+
+main { flex: 1; display: flex; align-items: center; padding: 140px 0 80px; }
+.eyebrow {
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:10px; letter-spacing:0.24em; text-transform:uppercase; color: var(--ink-dim);
+  margin-bottom: 24px;
+}
+.eyebrow::before { content:""; width:18px; height:1px; background: var(--accent); }
+
+h1 { font-family: var(--mono); margin: 0; font-weight: 600; font-size: clamp(36px, 5vw, 72px); line-height: 1.0; max-width: 16ch; letter-spacing: -0.005em; }
+h1 .accent { color: var(--accent); }
+.lede { color: var(--ink-dim); font-size: clamp(14px, 1.2vw, 16px); margin-top: 22px; max-width: 60ch; line-height: 1.6; }
+
+.layout {
+  display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: start; margin-top: 56px;
+}
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; gap: 40px; } }
+
+/* form */
+.form-card {
+  border: 1px solid var(--hair-strong);
+  background: linear-gradient(180deg, rgba(20,22,19,0.6), rgba(8,9,8,0.6));
+  padding: 36px;
+  position: relative;
+}
+.form-card .corner-mark {
+  position: absolute; top: -1px; left: -1px;
+  width: 18px; height: 18px;
+  border: 1px solid var(--accent); border-right: 0; border-bottom: 0;
+}
+.form-head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hair);
+  margin-bottom: 28px;
+}
+.form-head .live { color: var(--accent); display: flex; align-items: center; gap: 8px; }
+.form-head .live::before { content:""; width:6px; height:6px; background: var(--accent); box-shadow: 0 0 6px var(--accent-glow); }
+
+.field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; }
+.field label {
+  font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-dim);
+  display: flex; justify-content: space-between;
+}
+.field label .req { color: var(--accent); }
+.field input, .field select, .field textarea {
+  font: inherit; font-family: var(--mono); font-size: 14px;
+  background: transparent; color: var(--ink);
+  border: 0; border-bottom: 1px solid var(--hair-strong);
+  padding: 10px 0; outline: none;
+  transition: border-color .2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-bottom-color: var(--accent); }
+.field input::placeholder, .field textarea::placeholder { color: var(--ink-faint); }
+.field select { appearance: none; cursor: pointer; padding-right: 28px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-dim) 50%), linear-gradient(-45deg, transparent 50%, var(--ink-dim) 50%);
+  background-position: right 4px top 16px, right 10px top 16px; background-size: 6px 6px; background-repeat: no-repeat; }
+.field select option { background: var(--bg-2); color: var(--ink); }
+.field textarea { resize: vertical; min-height: 80px; }
+
+.checkrow { display: flex; gap: 10px; align-items: flex-start; font-family: var(--sans); font-size: 12px; color: var(--ink-dim); margin-top: 6px; line-height: 1.5; }
+.checkrow input { accent-color: var(--accent); margin-top: 3px; }
+
+.submit {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 18px 22px; margin-top: 14px;
+  background: var(--accent); color: #0a0b0a;
+  border: 1px solid var(--accent);
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+.submit:hover { background: transparent; color: var(--accent); }
+.submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.success {
+  display: none;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  padding: 28px;
+  margin-top: 20px;
+}
+.success.is-on { display: block; }
+.success h3 { margin: 0; font-family: var(--mono); font-size: 18px; color: var(--accent); }
+.success p { margin: 12px 0 0; font-family: var(--sans); font-size: 13px; color: var(--ink); line-height: 1.55; }
+.success .id { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; color: var(--ink-dim); margin-top: 14px; }
+
+/* perks side */
+.perks .perk-card {
+  border: 1px solid var(--hair);
+  padding: 22px;
+  margin-bottom: 16px;
+  position: relative;
+  transition: border-color .2s;
+}
+.perks .perk-card:hover { border-color: var(--accent-soft); }
+.perks .perk-card .h {
+  display:flex; justify-content: space-between; align-items: baseline;
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  margin-bottom: 12px;
+}
+.perks .perk-card .h .n { color: var(--accent); }
+.perks .perk-card h3 { font-family: var(--mono); margin: 0; font-size: 17px; font-weight: 600; }
+.perks .perk-card p { font-family: var(--sans); font-size: 13px; color: var(--ink-dim); margin: 8px 0 0; line-height: 1.55; }
+
+.foot {
+  padding: 28px 0 70px;
+  border-top: 1px solid var(--hair);
+  font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.foot a { color: var(--ink-dim); }
+.foot a:hover { color: var(--accent); }
+
+.logo { width: 132px; height: auto; display: block; margin-bottom: 36px; }
+.logo .signal { fill: var(--accent); }
+.logo .stroke  { fill: #0a0b0a; }
+.logo .ink     { fill: var(--accent); }
+.logo .wordmark { fill: var(--ink); font-family: var(--mono); font-size: 22px; font-weight: 600; letter-spacing: 0.02em; }
+</style>
+</head>
+<body>
+
+<div class="hud" aria-hidden="true">
+  <span class="corner tl"></span><span class="corner tr"></span>
+  <span class="corner bl"></span><span class="corner br"></span>
+  <div class="hud-bar top">
+    <div style="display:flex; align-items:center; gap:18px;">
+      <span><i class="dot"></i>RV / SYS — ONLINE</span>
+      <span>BUILD 04.26</span>
+    </div>
+    <nav class="nav-top">
+      <a href="Roadvault Explorer.html">PRODUCT</a>
+      <a href="Funding Brief.html">FUNDING</a>
+      <a href="Roadmap.html">ROADMAP</a>
+      <a href="Deck.html">DECK</a>
+      <a href="Founder List.html" class="is-active">FOUNDER LIST</a>
+    </nav>
+  </div>
+  <div class="hud-bar bot">
+    <span>LIST · RV-FL-001</span>
+    <span>FREE · NO SPAM · UNSUBSCRIBE ANY TIME</span>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+    <svg class="logo" viewBox="0 0 320 80" role="img" aria-label="RoadVault">
+      <rect class="signal" x="4" y="8" width="64" height="64" rx="8"></rect>
+      <rect class="stroke" x="14" y="18" width="44" height="44" rx="4"></rect>
+      <path class="ink" d="M24 52V28h15.4c6.4 0 10.4 3.5 10.4 8.6 0 3.6-2 6.2-5.1 7.5L52 52h-9.4l-6.1-7h-4V52H24Zm8.5-13.6h6.1c2.2 0 3.4-.8 3.4-2.4s-1.2-2.5-3.4-2.5h-6.1v4.9Zm21.3 13.6V28h8.5v24h-8.5Z"></path>
+      <text class="wordmark" x="88" y="50">ROADVAULT</text>
+    </svg>
+
+    <div class="eyebrow">Founder list · pre-POC</div>
+    <h1>First in the line for what you'll <span class="accent">actually use</span>.</h1>
+    <p class="lede">
+      A small private list of working creators who get prototype access, early-bird Kickstarter pricing,
+      and direct line to the build. No marketing emails. No drip funnels. Roughly one update per month
+      while we ship something real.
+    </p>
+
+    <div class="layout">
+      <!-- FORM -->
+      <form class="form-card" id="founderForm" novalidate>
+        <span class="corner-mark"></span>
+        <div class="form-head">
+          <span>Application · RV-FL-001</span>
+          <span class="live">Open · 240 / 500 seats</span>
         </div>
 
-        <aside class="tactical-panel">
-          <div class="status-pill">
-            <span class="status-dot"></span>
-            <span>Open intake</span>
-            <span>Dossier mode</span>
-          </div>
-          <dl class="data-list">
-            <div>
-              <dt>Roles</dt>
-              <dd>Creator / Investor / Sponsor / Press / Manufacturer / Other</dd>
-            </div>
-            <div>
-              <dt>Interest</dt>
-              <dd>Founder Kit / SessionVault SSD / Sponsor / Investment / Beta Testing</dd>
-            </div>
-            <div>
-              <dt>Response</dt>
-              <dd>Founder ID generated</dd>
-            </div>
-          </dl>
-        </aside>
-      </section>
-
-      <section class="section-shell dossier-section waitlist-layout">
-        <div>
-          <p class="section-index">01 / FOUNDER DOSSIER</p>
-          <h2>One clean intake for the right conversations.</h2>
-          <p class="section-lede narrow">
-            Founder list does not mean checkout. It means structured interest,
-            useful context, and a better next conversation.
-          </p>
-
-          <div class="stack-cards">
-            <article class="info-card">
-              <span class="info-tag">Creator</span>
-              <strong>Signal founder-kit or SSD demand.</strong>
-              <p>Tell us what gear you care about and where the current workflow breaks.</p>
-            </article>
-            <article class="info-card">
-              <span class="info-tag">Investor / Sponsor</span>
-              <strong>Point us at the right path.</strong>
-              <p>Use the form to route toward funding, partnership, or diligence conversations.</p>
-            </article>
-          </div>
+        <div class="field">
+          <label>Name <span class="req">*</span></label>
+          <input type="text" name="name" placeholder="Full name" required>
+        </div>
+        <div class="field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" name="email" placeholder="you@studio.com" required>
+        </div>
+        <div class="field">
+          <label>What do you shoot? <span class="req">*</span></label>
+          <select name="role" required>
+            <option value="">Select your category</option>
+            <option>Solo content / YouTube</option>
+            <option>Documentary / journalism</option>
+            <option>Music tour / DJ / podcast</option>
+            <option>Small production house</option>
+            <option>Photographer</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Where are you based? <span style="color:var(--ink-faint)">optional</span></label>
+          <input type="text" name="location" placeholder="City, country">
+        </div>
+        <div class="field">
+          <label>What's the worst thing you've lost on a shoot? <span style="color:var(--ink-faint)">optional</span></label>
+          <textarea name="story" placeholder="Real stories help us build the right thing first."></textarea>
         </div>
 
-        <div>
-          <form
-            class="waitlist-form"
-            id="founderForm"
-            name="roadvault-founder-list"
-            method="POST"
-            action="/thanks.html"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
-          >
-            <input type="hidden" name="form-name" value="roadvault-founder-list" />
-            <input type="hidden" name="interest" value="Founder Kit" />
-            <input type="hidden" name="submittedAt" value="" />
+        <label class="checkrow">
+          <input type="checkbox" required>
+          <span>I understand RoadVault is pre-POC. This is a free founder list — not a preorder, not a payment, not a guarantee of product delivery. V1 hardware will be tracker-compatible (AirTag/Tile/SmartTag).</span>
+        </label>
+        <label class="checkrow">
+          <input type="checkbox">
+          <span>Send me ~1 build update per month. Unsubscribe with one click, anytime.</span>
+        </label>
 
-            <label class="honeypot" aria-hidden="true">
-              Do not fill this out
-              <input name="bot-field" tabindex="-1" autocomplete="off" />
-            </label>
+        <button type="submit" class="submit">
+          <span>Add me to the list</span><span>→</span>
+        </button>
 
-            <div class="field-grid">
-              <label>
-                Name
-                <input type="text" name="name" autocomplete="name" required />
-              </label>
-              <label>
-                Email
-                <input type="email" name="email" autocomplete="email" required />
-              </label>
-            </div>
-
-            <label>
-              Role
-              <select name="role" required>
-                <option value="">Select role</option>
-                <option>Creator</option>
-                <option>Investor</option>
-                <option>Sponsor</option>
-                <option>Press</option>
-                <option>Manufacturer</option>
-                <option>Other</option>
-              </select>
-            </label>
-
-            <div class="track-toggle" role="radiogroup" aria-label="Interest">
-              <button
-                type="button"
-                class="track-choice active"
-                data-choice="Founder Kit"
-                data-founder-interest="true"
-                role="radio"
-                aria-checked="true"
-              >
-                Founder Kit
-              </button>
-              <button
-                type="button"
-                class="track-choice"
-                data-choice="SessionVault SSD"
-                data-founder-interest="true"
-                role="radio"
-                aria-checked="false"
-              >
-                SessionVault SSD
-              </button>
-              <button
-                type="button"
-                class="track-choice"
-                data-choice="Sponsor"
-                data-founder-interest="true"
-                role="radio"
-                aria-checked="false"
-              >
-                Sponsor
-              </button>
-              <button
-                type="button"
-                class="track-choice"
-                data-choice="Investment"
-                data-founder-interest="true"
-                role="radio"
-                aria-checked="false"
-              >
-                Investment
-              </button>
-              <button
-                type="button"
-                class="track-choice"
-                data-choice="Beta Testing"
-                data-founder-interest="true"
-                role="radio"
-                aria-checked="false"
-              >
-                Beta Testing
-              </button>
-            </div>
-
-            <label>
-              Short message
-              <textarea
-                name="message"
-                rows="5"
-                placeholder="Tell us what you want, what role you play, or what part of the product / funding path matters to you."
-                required
-              ></textarea>
-            </label>
-
-            <label class="checkbox-row">
-              <input type="checkbox" name="consent" required />
-              <span>
-                I understand RoadVault is pre-POC and pre-production, and this
-                form is for exploratory founder-interest only.
-              </span>
-            </label>
-
-            <button class="primary-action wide-action" type="submit">
-              Generate Founder ID
-            </button>
-            <p class="form-note" id="founderFormNote" role="status" aria-live="polite">
-              Founder ID will be generated after submission.
-            </p>
-          </form>
-
-          <article class="confirmation-panel" id="confirmationPanel" aria-live="polite">
-            <p class="section-index">CONFIRMATION STATE</p>
-            <div class="founder-id-line">
-              <span>Founder ID generated</span>
-              <strong class="founder-id-badge" id="founderIdValue">RV-XX-000000</strong>
-            </div>
-            <p id="confirmationSummary">Role / interest / dossier received</p>
-          </article>
+        <div class="success" id="success">
+          <h3>You're on the list.</h3>
+          <p>You'll get a build update when prototype samples arrive (T+30 from funding close), and a private Kickstarter early-bird link 24 hours before public launch.</p>
+          <div class="id">FOUNDER ID · <span id="founderId">RV-FL-0000</span></div>
         </div>
-      </section>
+      </form>
 
-      <section class="section-shell dossier-section disclosure-block">
-        <p class="legal-disclosure">
-          RoadVault is currently pre-production and pre-POC. This page is for
-          exploratory investor, sponsor, and founder-interest conversations
-          only. Product specifications, timelines, and availability are subject
-          to change. Any investment opportunity will be handled through proper
-          legal documentation and compliance review. RoadVault V1 is
-          tracker-compatible and is not affiliated with or certified by Apple
-          Find My, Android Find Hub, or any tracker manufacturer unless
-          explicitly stated.
-        </p>
-      </section>
-    </main>
+      <!-- PERKS -->
+      <aside class="perks">
+        <div class="perk-card">
+          <div class="h"><span class="n">PERK 01</span><span>FREE</span></div>
+          <h3>Prototype access updates</h3>
+          <p>You see the failed samples too. We document what didn't work — fabric runs that frayed, foam that crumbled, NFC reads that misfired. Not just the highlight reel.</p>
+        </div>
+        <div class="perk-card">
+          <div class="h"><span class="n">PERK 02</span><span>EARLY BIRD</span></div>
+          <h3>Kickstarter 24h early-bird</h3>
+          <p>Private link 24 hours before the public campaign, with founder-list pricing. The earliest tier, capped at 100 units, for the people who actually use this stuff.</p>
+        </div>
+        <div class="perk-card">
+          <div class="h"><span class="n">PERK 03</span><span>INPUT</span></div>
+          <h3>Direct line to the build</h3>
+          <p>One short survey per major decision — pouch dimensions, color options, recovery flow copy. We don't ship without running it past the list first.</p>
+        </div>
+        <div class="perk-card">
+          <div class="h"><span class="n">PERK 04</span><span>POST-V1</span></div>
+          <h3>SessionVault waitlist priority</h3>
+          <p>Founder-list members move to the top of the SessionVault SSD waitlist when V2 enters development.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
 
-    <footer class="site-footer">
-      <div class="section-shell footer-layout">
-        <strong>RoadVault</strong>
-        <span>Founder intake / RV-FL-001</span>
-      </div>
-    </footer>
+<footer class="foot wrap">
+  <div style="display:flex; gap: 28px;">
+    <span>RV / 2026</span>
+    <span>BERLIN · PDX</span>
+  </div>
+  <div style="display:flex; gap: 22px;">
+    <a href="Roadvault Explorer.html">↶ PRODUCT</a>
+    <a href="Funding Brief.html">FUNDING</a>
+    <a href="Deck.html">DECK</a>
+  </div>
+</footer>
 
-    <script src="script.js"></script>
-  </body>
+<script>
+const form = document.getElementById('founderForm');
+const success = document.getElementById('success');
+const founderId = document.getElementById('founderId');
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  // basic validation
+  const fd = new FormData(form);
+  if (!fd.get('name') || !fd.get('email') || !fd.get('role')) {
+    alert('Please fill in name, email, and category.');
+    return;
+  }
+  if (!form.querySelector('input[type="checkbox"]').checked) {
+    alert('Please confirm the pre-POC disclosure.');
+    return;
+  }
+  // generate a fake founder id
+  const id = 'RV-FL-' + String(Math.floor(Math.random() * 9000) + 1000);
+  founderId.textContent = id;
+  success.classList.add('is-on');
+  form.querySelector('.submit').disabled = true;
+  form.querySelector('.submit span').textContent = 'Welcome aboard · ' + id;
+  // scroll into view
+  success.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+</script>
+
+</body>
 </html>

@@ -1,4 +1,6 @@
 (function () {
+  const splashIntro = document.querySelector("#splashIntro");
+  const splashIntroVideo = document.querySelector("#splashIntroVideo");
   const productStage = document.querySelector(".product-stage");
   const founderForm = document.querySelector("#founderForm");
   const confirmationPanel = document.querySelector("#confirmationPanel");
@@ -12,6 +14,54 @@
 
   function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
+  }
+
+  function setupSplashIntro(intro, video) {
+    if (!intro || !video) {
+      document.body.classList.remove("splash-lock");
+      return;
+    }
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let dismissed = false;
+
+    function dismissIntro() {
+      if (dismissed) {
+        return;
+      }
+
+      dismissed = true;
+      intro.classList.add("is-exiting");
+      document.body.classList.remove("splash-lock");
+
+      setTimeout(() => {
+        intro.classList.add("is-hidden");
+        video.pause();
+      }, 1250);
+    }
+
+    if (reducedMotion.matches) {
+      dismissIntro();
+      return;
+    }
+
+    video.addEventListener("ended", dismissIntro, { once: true });
+    video.addEventListener(
+      "error",
+      () => {
+        setTimeout(dismissIntro, 900);
+      },
+      { once: true },
+    );
+
+    const playPromise = video.play();
+    if (playPromise) {
+      playPromise.catch(() => {
+        setTimeout(dismissIntro, 1400);
+      });
+    }
+
+    setTimeout(dismissIntro, 9200);
   }
 
   function setupProductStage(stage) {
@@ -183,6 +233,7 @@
     }
   }
 
+  setupSplashIntro(splashIntro, splashIntroVideo);
   setupProductStage(productStage);
   prefillFounderForm();
 

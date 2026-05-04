@@ -2,3 +2,6 @@
 .preview/
 tmp/
 graphify-out/
+.vercel
+_backup-before-*/
+*.html-mobile.png

@@ -1,0 +1,8 @@
+.DS_Store
+.git
+.preview/
+.vercel/
+_backup-before-claude-design-*/
+graphify-out/
+tmp/
+*.log
