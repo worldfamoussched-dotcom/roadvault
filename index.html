@@ -476,16 +476,24 @@ body {
 @media (max-width: 760px) {
   .hud-bar { left: 22px; right: 22px; font-size: 9px; }
   .hud-bar.top { top: 22px; }
-  .hud-bar.bot { bottom: 22px; }
+  .hud-bar.bot {
+    left: 22px;
+    right: 22px;
+    bottom: 16px;
+    justify-content: flex-end;
+    font-size: 8px;
+    letter-spacing: 0.18em;
+  }
+  .hud-bar.bot span:first-child { display: none; }
   .hud .corner.tl { top: 14px; left: 14px; }
   .hud .corner.tr { top: 14px; right: 14px; }
   .hud .corner.bl { bottom: 14px; left: 14px; }
   .hud .corner.br { bottom: 14px; right: 14px; }
-  .lockup { left: 22px; right: 22px; bottom: 100px; max-width: none; }
+  .lockup { left: 22px; right: 22px; bottom: 118px; max-width: none; }
   .hero-ambience { display: none; }
   .id-block { display: none; }
   .enter-cta { right: 22px; bottom: 22px; }
-  .progress { left: 22px; right: 22px; bottom: 76px; }
+  .progress { left: 22px; right: 22px; bottom: 92px; }
   .lockup h1 { font-size: 32px; }
 }
 
@@ -503,9 +511,8 @@ body {
 
   <!-- Background reveal video -->
   <div class="video-layer" id="videoLayer">
-    <video id="reveal" muted playsinline preload="auto" autoplay loop>
+    <video id="reveal" muted playsinline webkit-playsinline preload="auto" autoplay loop defaultMuted>
       <source src="media/product-reveal.mp4" type="video/mp4" />
-      <source src="media/splash-intro.mp4" type="video/mp4" />
     </video>
   </div>
 
@@ -596,6 +603,7 @@ body {
 
 <script>
 (function () {
+  const INTRO_TOKEN_KEY = 'roadvaultIntroPassed';
   const params = new URLSearchParams(window.location.search);
   const nextTarget = params.get('next') || 'Roadvault Explorer.html';
   const enteredTarget = nextTarget.includes('?')
@@ -622,6 +630,13 @@ body {
   let introStarted = false;
   let videoVisible = false;
 
+  video.muted = true;
+  video.defaultMuted = true;
+  video.playsInline = true;
+  video.setAttribute('muted', '');
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+
   function showEntryState() {
     requestAnimationFrame(() => {
       videoVisible = true;
@@ -634,6 +649,16 @@ body {
       video.play().catch(() => {});
     });
   }
+
+  function ensureVideoPlayback() {
+    video.muted = true;
+    video.defaultMuted = true;
+    const playAttempt = video.play();
+    if (playAttempt) playAttempt.catch(() => {});
+  }
+
+  video.addEventListener('loadeddata', ensureVideoPlayback);
+  video.addEventListener('canplay', ensureVideoPlayback);
 
   // 2) Track progress
   video.addEventListener('timeupdate', () => {
@@ -723,6 +748,11 @@ body {
 
     // Navigate after the overlay is fully in
     setTimeout(() => {
+      try {
+        sessionStorage.setItem(INTRO_TOKEN_KEY, '1');
+      } catch (err) {
+        // no-op: fallback is URL param only
+      }
       window.location.href = NEXT_URL;
     }, 1500);
   }

@@ -82,8 +82,30 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .nav-top a.is-active { color: var(--accent); border-bottom-color: var(--accent); }
 @media (max-width: 760px) {
   .hud-bar { left:14px; right:14px; font-size:9px; }
-  .hud-bar.top { flex-wrap: wrap; gap:10px; }
-  .nav-top { gap:14px; }
+  .hud-bar.top {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 12px;
+  }
+  .hud-bar.top > div:first-child {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .nav-top {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 14px;
+    width: 100%;
+  }
+  .nav-top a {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    line-height: 1.3;
+    white-space: normal;
+  }
 }
 
 /* ============ SHELL ============ */
@@ -412,8 +434,34 @@ h3 { font-size: clamp(15px, 1.4vw, 18px); line-height: 1.25; }
 @media (max-width: 760px) {
   .tl-track { height: 320px; padding: 60px 0 100px; }
   .tl-node { width: 60px; }
-  .tl-node .label { font-size: 9px; max-width: 90px; }
+  .tl-node .label { display: none; }
   .tl-node .when { font-size: 9px; top: -40px; }
+  .tl-node .icon-wrap {
+    bottom: -70px;
+    width: 44px;
+    height: 44px;
+  }
+  .tl-node .icon-wrap svg { width: 22px; height: 22px; }
+  .tl-controls {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .tl-controls .scrubber {
+    flex-basis: 100%;
+    order: 3;
+    min-width: 100%;
+  }
+  .tl-controls .clock {
+    min-width: 0;
+    text-align: left;
+  }
+  .hud-bar.bot {
+    justify-content: space-between;
+    font-size: 8px;
+  }
+}
+@media (max-width: 540px) {
+  .nav-top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ============ DETAIL PANEL (current phase) ============ */

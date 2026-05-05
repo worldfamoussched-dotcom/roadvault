@@ -430,7 +430,49 @@ p { margin: 0; }
 }
 .wedge-table tbody tr.us td:first-child { color: var(--accent); font-weight: 600; }
 @media (max-width: 720px) {
-  .wedge-table th, .wedge-table td { padding: 12px 8px; font-size: 11px; }
+  .wedge-table,
+  .wedge-table tbody,
+  .wedge-table tr,
+  .wedge-table td {
+    display: block;
+    width: 100%;
+  }
+  .wedge-table thead { display: none; }
+  .wedge-table tbody { display: grid; gap: 14px; }
+  .wedge-table tr {
+    border: 1px solid var(--hair);
+    padding: 14px 14px 10px;
+    background: rgba(20,22,19,0.46);
+  }
+  .wedge-table td {
+    padding: 6px 0;
+    border-bottom: 0;
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .wedge-table td:first-child {
+    display: block;
+    margin-bottom: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--hair);
+    color: var(--ink);
+    font-size: 12px;
+  }
+  .wedge-table td:nth-child(2)::before,
+  .wedge-table td:nth-child(3)::before,
+  .wedge-table td:nth-child(4)::before,
+  .wedge-table td:nth-child(5)::before {
+    color: var(--ink-faint);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 9px;
+  }
+  .wedge-table td:nth-child(2)::before { content: "Tracker-ready"; }
+  .wedge-table td:nth-child(3)::before { content: "Creator-tuned"; }
+  .wedge-table td:nth-child(4)::before { content: "Recovery flow"; }
+  .wedge-table td:nth-child(5)::before { content: "System, not SKU"; }
 }
 
 /* ============ USE OF FUNDS ============ */
@@ -875,13 +917,36 @@ body.whitepaper-page section .sec-meta {
     min-height: 68px;
     height: auto;
     padding: 14px 20px;
-    flex-wrap: wrap;
     gap: 12px;
   }
+  body.whitepaper-page .hud-bar.top {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  body.whitepaper-page .hud-bar.top > div:first-child {
+    width: 100%;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
   body.whitepaper-page .nav-top {
-    max-width: 100%;
-    overflow-x: auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px 14px;
+    width: 100%;
     padding-bottom: 4px;
+  }
+  body.whitepaper-page .nav-top a {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    line-height: 1.3;
+    white-space: normal;
+  }
+}
+@media (max-width: 540px) {
+  body.whitepaper-page .nav-top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 </style>
