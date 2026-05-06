@@ -173,6 +173,82 @@ p { margin: 0; }
   display: flex; flex-direction: column; gap: 28px;
   font-size: 11px;
 }
+.hero-product-panel {
+  border: 1px solid var(--hair-strong);
+  background: rgba(20,22,19,0.55);
+  backdrop-filter: blur(6px);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.hero-product-frame {
+  position: relative;
+  border: 1px solid var(--hair);
+  background:
+    radial-gradient(ellipse at 22% 18%, rgba(157,255,60,0.08), transparent 48%),
+    linear-gradient(180deg, rgba(10,11,10,0.12), rgba(10,11,10,0.3));
+  overflow: hidden;
+}
+.hero-product-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+.hero-product-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.hero-product-meta strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+.hero-product-copy h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.hero-product-copy p {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-dim);
+  line-height: 1.58;
+}
+.hero-mini-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.hero-mini-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.hero-mini-list li::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+.hero-note {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
 .hero-side .doc-card {
   border: 1px solid var(--hair-strong);
   background: rgba(20,22,19,0.55);
@@ -1019,7 +1095,7 @@ body.funding-simple .legal-block {
         move.
       </h1>
       <p class="tagline">
-        Pre-POC. Pre-production. Raising <strong style="color:var(--ink)">$35K–$75K</strong> to build campaign-grade prototypes and validate the first production path.
+        Raising <strong style="color:var(--ink)">$35K–$75K</strong> to turn the RoadVault Founder Kit into campaign-grade prototypes and a validated production path.
       </p>
       <div class="hero-quick">
         <strong>$35K–$75K</strong>
@@ -1043,16 +1119,25 @@ body.funding-simple .legal-block {
 
     <aside class="hero-side">
       <span class="stamp">Pre-POC · Active raise</span>
-      <div class="doc-card">
-        <h4><span>RV / Funding Brief</span></h4>
-        <div class="row"><span>Stage</span><span>Pre-POC prototype</span></div>
-        <div class="row"><span>Raise</span><span>$35K min · $75K ideal</span></div>
-        <div class="row"><span>Vehicle</span><span>SAFE / sponsor pledge</span></div>
-        <div class="row"><span>Use</span><span>Prototype build</span></div>
-        <div class="row"><span>Window</span><span>120 days</span></div>
-        <div class="row"><span>Status</span><span style="color:var(--accent)">Open · taking calls</span></div>
+      <div class="hero-product-panel">
+        <div class="hero-product-frame">
+          <img src="assets/hero.png" alt="RoadVault founder kit products arranged together on a dark field surface" />
+        </div>
+        <div class="hero-product-meta">
+          <span>Founder kit preview</span>
+          <strong>Actual product surface</strong>
+        </div>
+        <div class="hero-product-copy">
+          <h3>What the raise is building.</h3>
+          <p>TourVault, SetVault, NFC recovery tools, and the first campaign-grade product media. The whitepaper carries the deeper detail when someone wants the full model.</p>
+        </div>
+        <ul class="hero-mini-list">
+          <li>Tracker-compatible V1</li>
+          <li>Prototypes before promises</li>
+          <li>Whitepaper available on demand</li>
+        </ul>
       </div>
-      <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);">Brief view · whitepaper available</div>
+      <div class="hero-note">Brief view · whitepaper available</div>
     </aside>
   </div>
 </section>
